@@ -1,0 +1,28 @@
+{
+  "name": "cypress-mailcatcher",
+  "version": "1.0.0",
+  "description": "Cypress Commands for MailCatcher",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SMenigat/cypress-mailcatcher.git"
+  },
+  "keywords": [
+    "Cypress.io",
+    "MailCatcher"
+  ],
+  "author": "Samuel Menigat <samuel.menigat@gmail.com>",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/SMenigat/cypress-mailcatcher/issues"
+  },
+  "homepage": "https://github.com/SMenigat/cypress-mailcatcher#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "prettier": "^1.11.1"
+  }
+}
