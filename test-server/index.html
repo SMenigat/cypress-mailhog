@@ -88,7 +88,7 @@
       var $actions = $('.action-wrapper');
       $.each(actions, function(index, action) {
         var $newButton = $('<button />')
-          .data('action', action.action)
+          .attr('data-action', action.action)
           .text(action.label);
         $actions.append($newButton);
       });

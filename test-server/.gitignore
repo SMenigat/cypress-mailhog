@@ -1,6 +1,10 @@
 # composer
 vendor/
 
+# cypress stuff
+cypress/screenshots/
+cypress/videos/
+
 # Logs
 logs
 *.log

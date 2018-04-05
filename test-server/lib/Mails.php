@@ -14,7 +14,7 @@ class Mails {
     $mail = new PHPMailer(true);   
     $mail->SMTPDebug = 2;
     $mail->isSMTP();
-    $mail->Host = 'mailcatcher'; 
+    $mail->Host = 'mailhog'; 
     $mail->SMTPAuth = false;
     $mail->Port = 1025;
     return $mail;        

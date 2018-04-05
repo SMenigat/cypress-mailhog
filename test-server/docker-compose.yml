@@ -3,11 +3,11 @@ services:
   web:
    image: webdevops/php-apache-dev:7.1
    depends_on:
-     - mailcatcher
+     - mailhog
    links:
-     - mailcatcher
+     - mailhog
    volumes:
-     - ./:/var/www/html/cypress-mc-tests/
+     - ./:/var/www/html/cypress-mh-tests/
    ports:
      - "8080:80"
    environment:
@@ -17,7 +17,7 @@ services:
    devices:
      - /dev/fuse:/dev/fuse
 
-  mailcatcher:
-    image: smenigat/mailcatcher
+  mailhog:
+    image: mailhog/mailhog
     ports:
-      - "8090:1080" 
+      - "8090:8025" 
