@@ -1,6 +1,6 @@
-# cypress-mailcatcher
+# cypress-mailhog
 
-A collection of usefull Cypress commands for MailCatcher.
+A collection of usefull Cypress commands for MailHog 🐗.
 
 ### Start Dev Server
 
@@ -23,6 +23,6 @@ Start docker server.
 docker-compose up
 ```
 
-Open the Testpage in your browser: [http://localhost:8080/cypress-mc-tests/](http://localhost:8080/cypress-mc-tests/)
+Open the Testpage in your browser: [http://localhost:8080/cypress-mh-tests/](http://localhost:8080/cypress-mc-tests/)
 
 Open MailCatcher in your browser: [http://localhost:8090/](http://localhost:8090/)
