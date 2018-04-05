@@ -2,6 +2,15 @@
 
 A collection of usefull Cypress commands for MailHog 🐗.
 
+### Setup
+Add the base url of your MailHog installation to your `cypress.json`:
+```json
+{
+  ...
+  "mailHogUrl": "http://localhost:8090"
+}
+```
+
 ### Start Dev Server
 
 Navigate into the `test-server` directory.
