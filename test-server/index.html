@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <style>
+
+      body {
+        font-family: monospace;
+      }
+
+      .status-wrapper {
+        border-radius: 2;
+        border: 1px solid lightgray;
+      }
+
+      .status-wrapper > div {
+        padding: 4px;
+        margin: 0;
+        min-height: 24px;
+
+        display: flex;
+        align-items: center;
+      }
+
+      .status-wrapper > div + div {
+        border-top: 1px solid lightgray;
+      }
+
+      .status-wrapper > div .label {
+        width: 150px;
+        flex-shrink: 0;
+      }
+
+      .status-wrapper > div .value {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        flex-grow: 1;
+      }
+
+      .action-wrapper {
+        padding: 16px;
+      }
+
+      .action-wrapper > button {
+        display: block;
+        margin: 16px 0px;
+      }
+
+      .debug-output {
+        height: 200px;
+        width: 100%;
+        resize: none;
+        font-family: monospace;
+        font-size: 11px;
+        overflow: auto;
+        white-space: pre-line;
+        border: 1px dotted lightgray;
+        padding: 8px;
+        border-radius: 2px;
+      }
+    </style>
+  </head><body>
+    <div class="status-wrapper">
+      <div>
+        <div class="label">Triggered Action: </div>
+        <div class="value action">-</div>
+      </div><div>
+        <div class="label">Debug Output: </div>
+        <div class="value">
+          <pre class="debug-output" readonly></pre>
+        </div>
+      </div>
+      <div>
+        <div class="label">Status:</div>
+        <div class="value status">💤</div>
+      </div>
+    </div>
+    <div class="action-wrapper"></div>
+    <script>
+      // render buttons
+      var actions = [
+        { action: 'generate-single', label: 'Generate Single' },
+        { action: 'generate-bulk', label: 'Generate Multiple' },
+      ];
+
+
+      var $actions = $('.action-wrapper');
+      $.each(actions, function(index, action) {
+        var $newButton = $('<button />')
+          .data('action', action.action)
+          .text(action.label);
+        $actions.append($newButton);
+      });
+
+
+      function setStatus(status) {
+        $('.status').text(status);
+      }
+      function setAction(action) {
+        $('.action').text(action);
+      }
+      $('button').click(function() {
+        var action = $(this).data('action');
+        if (action) {
+          setAction(action);
+          setStatus('⏳');
+          $.ajax({
+            method: 'POST',
+            url: 'mailer.php',
+            data: {
+              action: action,
+            }
+          }).then(function(response) {
+            setStatus('✅');
+            $('.debug-output').html(response);
+          }).fail(function() {
+            setStatus('🚫');
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+   image: webdevops/php-apache-dev:7.1
+   depends_on:
+     - mailcatcher
+   links:
+     - mailcatcher
+   volumes:
+     - ./:/var/www/html/cypress-mc-tests/
+   ports:
+     - "8080:80"
+   environment:
+     - PHP_DISPLAY_ERRORS=E_ALL
+     - WEB_DOCUMENT_ROOT=/var/www/html
+   privileged: true
+   devices:
+     - /dev/fuse:/dev/fuse
+
+  mailcatcher:
+    image: smenigat/mailcatcher
+    ports:
+      - "8090:1080" 
