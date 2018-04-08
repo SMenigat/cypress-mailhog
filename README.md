@@ -11,6 +11,22 @@ Add the base url of your MailHog installation to your `cypress.json`:
 }
 ```
 
+
+## Commands
+
+### Jim Chaos Monkey
+#### mhGetJimMode()
+Returns if Jim is enabled / disabled.
+```JavaScript
+cy.mhGetJimMode().should('eq', true);
+```
+#### mhSetJimMode( enabled )
+Enables / Disables Jim chaos monkey.
+```JavaScript
+cy.mhSetJimMode(true).mhGetJimMode().should('eq', true);
+```
+
+
 ## Package Development
 ### Start Local Test Server
 
