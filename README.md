@@ -3,6 +3,17 @@
 A collection of usefull Cypress commands for MailHog 🐗.
 
 ### Setup
+Install this package via NPM:
+```bash
+npm install --dev cypress-mailhog
+```
+
+Include this package into your Cypress command file:
+```JavaScript
+// cypress/support/commands.js
+import 'cypress-mailhog';
+```
+
 Add the base url of your MailHog installation to your `cypress.json`:
 ```json
 {
