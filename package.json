@@ -1,25 +1,27 @@
 {
-  "name": "cypress-mailcatcher",
+  "name": "cypress-mailhog",
   "version": "1.0.0",
-  "description": "Cypress Commands for MailCatcher",
+  "description": "Cypress Commands for MailHog",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SMenigat/cypress-mailcatcher.git"
+    "url": "git+https://github.com/SMenigat/cypress-mailhog.git"
   },
   "keywords": [
+    "JavaScript",
+    "Testing",
     "Cypress.io",
-    "MailCatcher"
+    "MailHog"
   ],
   "author": "Samuel Menigat <samuel.menigat@gmail.com>",
   "license": "GPL-2.0",
   "bugs": {
-    "url": "https://github.com/SMenigat/cypress-mailcatcher/issues"
+    "url": "https://github.com/SMenigat/cypress-mailhog/issues"
   },
-  "homepage": "https://github.com/SMenigat/cypress-mailcatcher#readme",
+  "homepage": "https://github.com/SMenigat/cypress-mailhog#readme",
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
