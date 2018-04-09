@@ -27,6 +27,15 @@ describe('MailHog', () => {
     it('cy.mhGetAllMails() - returns an array containing all mails', () => {
       cy.mhGetAllMails().should('have.length', 10);
     });
+    it('cy.mhGetMailsBySubject(subject) - returns array of mails by subject', () => {
+      cy.mhGetMailsBySubject('Bulk Mail 1/10').should('have.length', 1);
+    });
+    it('cy.mhGetMailsBySender(from) - returns array of mails by sender', () => {
+      cy.mhGetMailsBySender('single@example.com').should('have.length', 10);
+    });
+    it('cy.mhGetMailsByRecipient(recipient) - returns array of mails by recipient', () => {
+      cy.mhGetMailsByRecipient('recipient@example.com').should('have.length', 10);
+    });
     it('cy.mhDeleteAll() - delets all mails from MailCatcher', () => {
       cy
         .mhDeleteAll()
@@ -34,7 +43,7 @@ describe('MailHog', () => {
         .should('have.length', 0);
     });
   });
-  describe('Finding Mails 🔍', () => {
+  describe('Asserting the Mail Collection 🔍', () => {
     beforeEach(() => {
       cy.mhDeleteAll();
       triggerAction('generate-single');

@@ -24,7 +24,35 @@ Add the base url of your MailHog installation to your `cypress.json`:
 
 
 ## Commands
-### Finding Mails 🔍
+### Mail Collection
+#### mhGetAllMails() 
+Returns a promise, containing an array of all the mails stored in MailHog.
+```JavaScript
+cy.mhGetAllMails().should('have.length', 1);
+```
+#### mhGetMailsBySubject( subject ) 
+Returns a promise, containing an array of all mails with given subject.
+```JavaScript
+cy.mhGetMailsBySubject('My Subject').should('have.length', 1);
+```
+#### mhGetMailsBySender( from ) 
+Returns a promise, containing an array of all mails with given sender.
+```JavaScript
+cy.mhGetMailsBySender('sender@example.com').should('have.length', 1);
+```
+#### mhGetMailsByRecipient( recipient ) 
+Returns a promise, containing an array of all mails with given recipient.
+```JavaScript
+cy.mhGetMailsByRecipient('recipient@example.com').should('have.length', 1);
+```
+#### mhDeleteAll()
+Deletes all stored mails from MailHog.
+```JavaScript
+cy.mhDeleteAll();
+``` 
+
+
+### Asserting the Mail Collection 🔍
 #### mhHasMailWithSubject( subject )
 Asserts if there is a mail with given subject.
 ```JavaScript
@@ -39,19 +67,6 @@ cy.mhHasMailFrom('sender@example.com');
 Asserts if there is a mail to given recipient (looks for "To", "CC" and "BCC").
 ```JavaScript
 cy.mhHasMailFrom('recipient@example.com');
-``` 
-
-
-### Mail Collections 
-#### mhGetAllMails() 
-Returns a promise, containing an array of all the mails stored in MailHog.
-```JavaScript
-cy.mhGetAllMails().should('have.length', 1);
-```
-#### mhDeleteAll()
-Deletes all stored mails from MailHog.
-```JavaScript
-cy.mhDeleteAll();
 ``` 
 
 

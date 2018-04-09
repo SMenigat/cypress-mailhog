@@ -37,37 +37,36 @@ Cypress.Commands.add('mhGetAllMails', () => {
     .then((parsed) => parsed.items);
 });
 
-Cypress.Commands.add('mhHasMailWithSubject', (subject) => {
+Cypress.Commands.add('mhGetMailsBySubject', (subject) => {
   cy.mhGetAllMails().then((mails) => {
-    const subjects = mails.reduce(
-      (subjects, mail) => [subjects, ...mail.Content.Headers.Subject],
-      []
-    );
-    expect(subjects).to.contain(subject);
+    return mails.filter((mail) => mail.Content.Headers.Subject[0] === subject);
   });
+});
+
+Cypress.Commands.add('mhGetMailsByRecipient', (recipient) => {
+  cy.mhGetAllMails().then((mails) => {
+    return mails.filter((mail) =>
+      mail.To.map(
+        (recipientObj) => `${recipientObj.Mailbox}@${recipientObj.Domain}`
+      ).includes(recipient)
+    );
+  });
+});
+
+Cypress.Commands.add('mhGetMailsBySender', (from) => {
+  cy.mhGetAllMails().then((mails) => {
+    return mails.filter((mail) => mail.Raw.From === from);
+  });
+});
+
+Cypress.Commands.add('mhHasMailWithSubject', (subject) => {
+  cy.mhGetMailsBySubject(subject).should('not.have.length', 0);
 });
 
 Cypress.Commands.add('mhHasMailFrom', (from) => {
-  cy.mhGetAllMails().then((mails) => {
-    const fromAdresses = mails.reduce(
-      (adresses, mail) => [adresses, mail.Raw.From],
-      []
-    );
-    expect(fromAdresses).to.contain(from);
-  });
+  cy.mhGetMailsBySender(from).should('not.have.length', 0);
 });
 
 Cypress.Commands.add('mhHasMailTo', (recipient) => {
-  cy.mhGetAllMails().then((mails) => {
-    const recipientAdresses = mails.reduce(
-      (adresses, mail) => [
-        adresses,
-        ...mail.To.map(
-          (recipientObj) => `${recipientObj.Mailbox}@${recipientObj.Domain}`
-        ),
-      ],
-      []
-    );
-    expect(recipientAdresses).to.contain(recipient);
-  });
+  cy.mhGetMailsByRecipient(recipient).should('not.have.length', 0);
 });
