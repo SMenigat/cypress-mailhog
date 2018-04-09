@@ -26,29 +26,73 @@ Add the base url of your MailHog installation to your `cypress.json`:
 ## Commands
 ### Mail Collection
 #### mhGetAllMails() 
-Returns a promise, containing an array of all the mails stored in MailHog.
+Yields an array of all the mails stored in MailHog.
 ```JavaScript
 cy.mhGetAllMails().should('have.length', 1);
 ```
 #### mhGetMailsBySubject( subject ) 
-Returns a promise, containing an array of all mails with given subject.
+Yields an array of all mails with given subject.
 ```JavaScript
 cy.mhGetMailsBySubject('My Subject').should('have.length', 1);
 ```
 #### mhGetMailsBySender( from ) 
-Returns a promise, containing an array of all mails with given sender.
+Yields an array of all mails with given sender.
 ```JavaScript
 cy.mhGetMailsBySender('sender@example.com').should('have.length', 1);
 ```
 #### mhGetMailsByRecipient( recipient ) 
-Returns a promise, containing an array of all mails with given recipient.
+Yields an array of all mails with given recipient.
 ```JavaScript
 cy.mhGetMailsByRecipient('recipient@example.com').should('have.length', 1);
 ```
+#### mhFirst()
+Yields the first mail of the loaded selection.
+```JavaScript
+cy.mhGetAllMails().mhFirst();
+``` 
 #### mhDeleteAll()
 Deletes all stored mails from MailHog.
 ```JavaScript
 cy.mhDeleteAll();
+``` 
+
+
+### Handling a Single Mail ✉️
+#### mhGetSubject()
+Yields the subject of the current mail.
+```JavaScript
+cy
+  .mhGetAllMails()
+  .mhFirst()
+  .mhGetSubject()
+  .should('eq', 'My Mails Subject');
+``` 
+#### mhGetBody()
+Yields the body of the current mail.
+```JavaScript
+cy
+  .mhGetAllMails()
+  .mhFirst()
+  .mhGetBody()
+  .should('contain', 'Part of the Message Body');
+``` 
+#### mhGetSender()
+Yields the sender of the current mail.
+```JavaScript
+cy
+  .mhGetAllMails()
+  .mhFirst()
+  .mhGetSender()
+  .should('be', 'sender@example.com');
+``` 
+#### mhGetRecipients()
+Yields the sender of the current mail.
+```JavaScript
+cy
+  .mhGetAllMails()
+  .mhFirst()
+  .mhGetRecipients()
+  .should('contain', 'recipient@example.com');
 ``` 
 
 

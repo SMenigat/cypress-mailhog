@@ -8,6 +8,9 @@ if ($_POST['action']) {
     case 'generate-single': 
       $mailer->sendSingle();
       break;
+    case 'generate-single-with-attachment': 
+      $mailer->sendSingleWithAttachment();
+      break;
     case 'generate-bulk': 
       $mailer->sendBulk();
       break;

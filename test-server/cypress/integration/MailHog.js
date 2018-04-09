@@ -34,7 +34,9 @@ describe('MailHog', () => {
       cy.mhGetMailsBySender('single@example.com').should('have.length', 10);
     });
     it('cy.mhGetMailsByRecipient(recipient) - returns array of mails by recipient', () => {
-      cy.mhGetMailsByRecipient('recipient@example.com').should('have.length', 10);
+      cy
+        .mhGetMailsByRecipient('recipient@example.com')
+        .should('have.length', 10);
     });
     it('cy.mhDeleteAll() - delets all mails from MailCatcher', () => {
       cy
@@ -42,6 +44,41 @@ describe('MailHog', () => {
         .mhGetAllMails()
         .should('have.length', 0);
     });
+  });
+  describe.only('Handling a Single Mail ✉️', () => {
+    beforeEach(() => {
+      cy.mhDeleteAll();
+      triggerAction('generate-single');
+    });
+    it('mail.mhGetSubject() - returns the mails subject', () => {
+      cy
+        .mhGetAllMails()
+        .mhFirst()
+        .mhGetSubject()
+        .should('eq', 'Single Mail');
+    });
+    it('mail.mhGetBody() - returns the message body', () => {
+      cy
+        .mhGetAllMails()
+        .mhFirst()
+        .mhGetBody()
+        .should('contain', 'HTML message body');
+    });
+    it('mail.mhGetSender() - returns sender', () => {
+      cy
+        .mhGetAllMails()
+        .mhFirst()
+        .mhGetSender()
+        .should('be', 'single@example.com');
+    });
+    it('mail.mhGetRecipients() - returns recipients', () => {
+      cy
+      .mhGetAllMails()
+      .mhFirst()
+      .mhGetRecipients()
+      .should('contain', 'bcc-recipient@example.com');
+    });
+    it('mail.mhHasAttachment() - asserts if mail has attachment');
   });
   describe('Asserting the Mail Collection 🔍', () => {
     beforeEach(() => {

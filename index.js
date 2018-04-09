@@ -23,6 +23,9 @@ Cypress.Commands.add('mhSetJimMode', (enabled) => {
   });
 });
 
+/**
+ * Mail Collection
+ */
 Cypress.Commands.add('mhDeleteAll', () => {
   return cy.request('DELETE', mhApiUrl('/v1/messages'));
 });
@@ -35,6 +38,10 @@ Cypress.Commands.add('mhGetAllMails', () => {
     })
     .then((response) => JSON.parse(response.body))
     .then((parsed) => parsed.items);
+});
+
+Cypress.Commands.add('mhFirst', {prevSubject: true}, (mails) => {
+  return Array.isArray(mails) && mails.length > 0 ? mails[0] : mails;
 });
 
 Cypress.Commands.add('mhGetMailsBySubject', (subject) => {
@@ -59,6 +66,34 @@ Cypress.Commands.add('mhGetMailsBySender', (from) => {
   });
 });
 
+/**
+ * Single Mail Commands and Assertions
+ */
+Cypress.Commands.add('mhGetSubject', {prevSubject: true}, (mail) => {
+  return cy.wrap(mail.Content.Headers).then((headers) => headers.Subject[0]);
+});
+
+Cypress.Commands.add('mhGetBody', {prevSubject: true}, (mail) => {
+  return cy.wrap(mail.Content).its('Body');
+});
+
+Cypress.Commands.add('mhGetSender', {prevSubject: true}, (mail) => {
+  return cy.wrap(mail.Raw).its('From');
+});
+
+Cypress.Commands.add('mhGetRecipients', {prevSubject: true}, (mail) => {
+  return cy
+    .wrap(mail)
+    .then((mail) =>
+      mail.To.map(
+        (recipientObj) => `${recipientObj.Mailbox}@${recipientObj.Domain}`
+      )
+    );
+});
+
+/**
+ * Mail Collection Assertions
+ */
 Cypress.Commands.add('mhHasMailWithSubject', (subject) => {
   cy.mhGetMailsBySubject(subject).should('not.have.length', 0);
 });
