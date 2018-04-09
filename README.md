@@ -13,8 +13,38 @@ Add the base url of your MailHog installation to your `cypress.json`:
 
 
 ## Commands
+### Finding Mails 🔍
+#### mhHasMailWithSubject( subject )
+Asserts if there is a mail with given subject.
+```JavaScript
+cy.mhHasMailWithSubject('My Subject');
+``` 
+#### mhHasMailFrom( from )
+Asserts if there is a mail from given sender.
+```JavaScript
+cy.mhHasMailFrom('sender@example.com');
+``` 
+#### mhHasMailTo( recipient )
+Asserts if there is a mail to given recipient (looks for "To", "CC" and "BCC").
+```JavaScript
+cy.mhHasMailFrom('recipient@example.com');
+``` 
 
-### Jim Chaos Monkey
+
+### Mail Collections 
+#### mhGetAllMails() 
+Returns a promise, containing an array of all the mails stored in MailHog.
+```JavaScript
+cy.mhGetAllMails().should('have.length', 1);
+```
+#### mhDeleteAll()
+Deletes all stored mails from MailHog.
+```JavaScript
+cy.mhDeleteAll();
+``` 
+
+
+### Jim Chaos Monkey 🐵
 #### mhGetJimMode()
 Returns if Jim is enabled / disabled.
 ```JavaScript

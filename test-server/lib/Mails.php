@@ -31,7 +31,9 @@ class Mails {
     // create with some basic metadata
     $mail = $this->createMail();
     $mail->setFrom('single@example.com', 'Single');
-    $mail->addAddress('recipient@example.net', 'Recipient');
+    $mail->addAddress('recipient@example.com', 'Recipient');
+    $mail->addCC('cc-recipient@example.com');
+    $mail->addBCC('bcc-recipient@example.com');
 
     //Content
     $mail->isHTML(true);                                  // Set email format to HTML
