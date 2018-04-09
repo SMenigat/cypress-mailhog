@@ -28,27 +28,37 @@ Add the base url of your MailHog installation to your `cypress.json`:
 #### mhGetAllMails() 
 Yields an array of all the mails stored in MailHog.
 ```JavaScript
-cy.mhGetAllMails().should('have.length', 1);
+cy
+  .mhGetAllMails()
+  .should('have.length', 1);
 ```
 #### mhGetMailsBySubject( subject ) 
 Yields an array of all mails with given subject.
 ```JavaScript
-cy.mhGetMailsBySubject('My Subject').should('have.length', 1);
+cy
+  .mhGetMailsBySubject('My Subject')
+  .should('have.length', 1);
 ```
 #### mhGetMailsBySender( from ) 
 Yields an array of all mails with given sender.
 ```JavaScript
-cy.mhGetMailsBySender('sender@example.com').should('have.length', 1);
+cy
+  .mhGetMailsBySender('sender@example.com')
+  .should('have.length', 1);
 ```
 #### mhGetMailsByRecipient( recipient ) 
 Yields an array of all mails with given recipient.
 ```JavaScript
-cy.mhGetMailsByRecipient('recipient@example.com').should('have.length', 1);
+cy
+  .mhGetMailsByRecipient('recipient@example.com')
+  .should('have.length', 1);
 ```
 #### mhFirst()
 Yields the first mail of the loaded selection.
 ```JavaScript
-cy.mhGetAllMails().mhFirst();
+cy
+  .mhGetAllMails()
+  .mhFirst();
 ``` 
 #### mhDeleteAll()
 Deletes all stored mails from MailHog.
@@ -118,12 +128,17 @@ cy.mhHasMailFrom('recipient@example.com');
 #### mhGetJimMode()
 Returns if Jim is enabled / disabled.
 ```JavaScript
-cy.mhGetJimMode().should('eq', true);
+cy
+  .mhGetJimMode()
+  .should('eq', true);
 ```
 #### mhSetJimMode( enabled )
 Enables / Disables Jim chaos monkey.
 ```JavaScript
-cy.mhSetJimMode(true).mhGetJimMode().should('eq', true);
+cy
+  .mhSetJimMode(true)
+  .mhGetJimMode()
+  .should('eq', true);
 ```
 
 
