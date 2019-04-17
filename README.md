@@ -120,7 +120,7 @@ cy.mhHasMailFrom('sender@example.com');
 #### mhHasMailTo( recipient )
 Asserts if there is a mail to given recipient (looks for "To", "CC" and "BCC").
 ```JavaScript
-cy.mhHasMailFrom('recipient@example.com');
+cy.mhHasMailTo('recipient@example.com');
 ``` 
 
 
