@@ -36,7 +36,7 @@ Cypress.Commands.add('mhGetAllMails', () => {
       method: 'GET',
       url: mhApiUrl('/v2/messages?limit=9999'),
     })
-    .then((response) => JSON.parse(response.body))
+    .then((response) => response.body)
     .then((parsed) => parsed.items);
 });
 
