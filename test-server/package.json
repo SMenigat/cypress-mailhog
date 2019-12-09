@@ -12,7 +12,5 @@
   "devDependencies": {
     "cypress": "^3.7.0"
   },
-  "dependencies": {
-    "jquery": "^3.3.1"
-  }
+  "dependencies": {}
 }
