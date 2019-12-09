@@ -45,7 +45,7 @@ describe('MailHog', () => {
         .should('have.length', 0);
     });
   });
-  describe.only('Handling a Single Mail ✉️', () => {
+  describe('Handling a Single Mail ✉️', () => {
     beforeEach(() => {
       cy.mhDeleteAll();
       triggerAction('generate-single');
