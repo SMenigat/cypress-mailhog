@@ -1,0 +1,17 @@
+name: Cypress
+
+on: [push]
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Dependencies
+      run: |
+        cd test-server
+        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+    - name: Run Cypress Tests
+      run: |
+        cd test-server
+        docker-compose -f ./docker-compose.yml -f ./docker-compose.cypress.yml up --remove-orphans --build --exit-code-from cypress
