@@ -1,6 +1,7 @@
 # cypress-mailhog
 
 A collection of usefull Cypress commands for MailHog 🐗.
+This package supports TypeScript out of the box. 
 
 ### Setup
 Install this package via NPM:
@@ -140,7 +141,6 @@ cy
   .mhGetJimMode()
   .should('eq', true);
 ```
-
 
 ## Package Development
 ### Start Local Test Server
