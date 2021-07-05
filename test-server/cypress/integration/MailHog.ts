@@ -1,4 +1,4 @@
-const triggerAction = (actionName) => {
+const triggerAction = (actionName: string) => {
   return cy
     .get(`[data-action="${actionName}"`)
     .click()
@@ -69,7 +69,7 @@ describe('MailHog', () => {
         .mhGetAllMails()
         .mhFirst()
         .mhGetSender()
-        .should('be', 'single@example.com');
+        .should('equal', 'single@example.com');
     });
     it('mail.mhGetRecipients() - returns recipients', () => {
       cy
