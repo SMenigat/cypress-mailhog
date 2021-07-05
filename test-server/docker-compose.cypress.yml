@@ -1,12 +1,11 @@
 version: '3'
 services:
   cypress:
-    image: cypress/included:7.6.0
+    build:
+      context: ../
+      dockerfile: ./test-server/Dockerfile
     depends_on: 
       - web
-    working_dir: /e2e/test-server
-    volumes:
-      - ../:/e2e
     environment: 
       - CYPRESS_BASE_URL=http://web/cypress-mh-tests/
       - CYPRESS_mailHogUrl=http://mailhog:8025
