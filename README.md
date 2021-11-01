@@ -94,7 +94,7 @@ cy
   .mhGetAllMails()
   .mhFirst()
   .mhGetSender()
-  .should('be', 'sender@example.com');
+  .should('eq', 'sender@example.com');
 ``` 
 #### mhGetRecipients()
 Yields the recipient of the current mail.
