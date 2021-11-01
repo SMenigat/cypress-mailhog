@@ -97,7 +97,7 @@ cy
   .should('be', 'sender@example.com');
 ``` 
 #### mhGetRecipients()
-Yields the sender of the current mail.
+Yields the recipient of the current mail.
 ```JavaScript
 cy
   .mhGetAllMails()
