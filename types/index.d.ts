@@ -1,7 +1,7 @@
 declare namespace Cypress {
   interface Chainable {
-    mhGetJimMode(): Chainable<boolean>;
-    mhSetJimMode(enabled : boolean): Chainable<Cypress.Response<any>>;
+    mhGetJimMode(auth: JSON): Chainable<boolean>;
+    mhSetJimMode(enabled : boolean, auth: JSON): Chainable<Cypress.Response<any>>;
     mhDeleteAll(): Chainable<Cypress.Response<any>>;
     mhGetAllMails(): Chainable<mailhog.Item[]>;
     mhFirst(): Chainable<mailhog.Item>;

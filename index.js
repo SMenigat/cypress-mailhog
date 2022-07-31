@@ -4,38 +4,50 @@ const mhApiUrl = (path) => {
   return `${basePath}/api${path}`;
 };
 
-Cypress.Commands.add('mhGetJimMode', (enabled) => {
+const auth_default = {
+  "user": "",
+  "pass": ""
+}
+
+Cypress.Commands.add('mhGetJimMode', (auth=auth_default) => {
   return cy
     .request({
       method: 'GET',
       url: mhApiUrl('/v2/jim'),
       failOnStatusCode: false,
+      auth: auth
     })
     .then((response) => {
       return cy.wrap(response.status === 200);
     });
 });
 
-Cypress.Commands.add('mhSetJimMode', (enabled) => {
+Cypress.Commands.add('mhSetJimMode', (enabled, auth=auth_default) => {
   return cy.request({
     method: enabled ? 'POST' : 'DELETE',
     url: mhApiUrl('/v2/jim'),
     failOnStatusCode: false,
+    auth: auth
   });
 });
 
 /**
  * Mail Collection
  */
-Cypress.Commands.add('mhDeleteAll', () => {
-  return cy.request('DELETE', mhApiUrl('/v1/messages'));
-});
+Cypress.Commands.add('mhDeleteAll', (auth=auth_default) => {
+  return cy.request({
+    method: 'DELETE',
+    url: mhApiUrl('/v1/messages'),
+    auth: auth
+  })
+})
 
-Cypress.Commands.add('mhGetAllMails', () => {
+Cypress.Commands.add('mhGetAllMails', (auth=auth_default) => {
   return cy
     .request({
       method: 'GET',
       url: mhApiUrl('/v2/messages?limit=9999'),
+      auth: auth
     })
     .then((response) => {
         if (typeof response.body === 'string') {
