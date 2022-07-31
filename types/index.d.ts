@@ -5,11 +5,11 @@ declare namespace Cypress {
     mhDeleteAll(auth?: JSON): Chainable<Cypress.Response<any>>;
     mhGetAllMails(auth?: JSON, limit?: number): Chainable<mailhog.Item[]>;
     mhFirst(): Chainable<mailhog.Item>;
-    mhGetMailsBySubject(subject : string): Chainable<mailhog.Item[]>;
-    mhGetMailsByRecipient(recipient : string): Chainable<mailhog.Item[]>;
-    mhGetMailsBySender(from : string): Chainable<mailhog.Item[]>;
+    mhGetMailsBySubject(subject : string, auth?: JSON, limit?: number): Chainable<mailhog.Item[]>;
+    mhGetMailsByRecipient(recipient : string, auth?: JSON, limit?: number): Chainable<mailhog.Item[]>;
+    mhGetMailsBySender(from : string, auth?: JSON, limit?: number): Chainable<mailhog.Item[]>;
     mhGetSubject(): Chainable<string>;
-    mhGetBody(): Chainablce<string>;
+    mhGetBody(): Chainable<string>;
     mhGetSender(): Chainable<string>;
     mhGetRecipients(): Chainable<string[]>;
     mhHasMailWithSubject(subject : string): Chainable;

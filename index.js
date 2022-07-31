@@ -63,14 +63,14 @@ Cypress.Commands.add('mhFirst', {prevSubject: true}, (mails) => {
   return Array.isArray(mails) && mails.length > 0 ? mails[0] : mails;
 });
 
-Cypress.Commands.add('mhGetMailsBySubject', (subject) => {
-  cy.mhGetAllMails().then((mails) => {
+Cypress.Commands.add('mhGetMailsBySubject', (subject, auth=auth_default, limit=50) => {
+  cy.mhGetAllMails(auth, limit).then((mails) => {
     return mails.filter((mail) => mail.Content.Headers.Subject[0] === subject);
   });
 });
 
-Cypress.Commands.add('mhGetMailsByRecipient', (recipient) => {
-  cy.mhGetAllMails().then((mails) => {
+Cypress.Commands.add('mhGetMailsByRecipient', (recipient, auth=auth_default, limit=50) => {
+  cy.mhGetAllMails(auth, limit).then((mails) => {
     return mails.filter((mail) =>
       mail.To.map(
         (recipientObj) => `${recipientObj.Mailbox}@${recipientObj.Domain}`
@@ -79,8 +79,8 @@ Cypress.Commands.add('mhGetMailsByRecipient', (recipient) => {
   });
 });
 
-Cypress.Commands.add('mhGetMailsBySender', (from) => {
-  cy.mhGetAllMails().then((mails) => {
+Cypress.Commands.add('mhGetMailsBySender', (from, auth=auth_default, limit=50) => {
+  cy.mhGetAllMails(auth, limit).then((mails) => {
     return mails.filter((mail) => mail.Raw.From === from);
   });
 });
