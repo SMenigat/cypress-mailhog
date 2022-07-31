@@ -4,9 +4,10 @@ const mhApiUrl = (path) => {
   return `${basePath}/api${path}`;
 };
 
-const auth_default = {
-  "user": "",
-  "pass": ""
+const mhAuth = Cypress.env('mailHogAuth') = (auth) => {
+  if(auth == undefined) {
+    return {"user": "", "pass": ""}
+  }
 }
 
 Cypress.Commands.add('mhGetJimMode', (auth=auth_default) => {
