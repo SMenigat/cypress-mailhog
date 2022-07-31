@@ -42,11 +42,11 @@ Cypress.Commands.add('mhDeleteAll', (auth=auth_default) => {
   })
 })
 
-Cypress.Commands.add('mhGetAllMails', (auth=auth_default) => {
+Cypress.Commands.add('mhGetAllMails', (auth=auth_default, limit=50) => {
   return cy
     .request({
       method: 'GET',
-      url: mhApiUrl('/v2/messages?limit=9999'),
+      url: mhApiUrl(`/v2/messages?limit=${limit}`),
       auth: auth
     })
     .then((response) => {
