@@ -23,31 +23,38 @@ Add the base url of your MailHog installation to your `cypress.json`:
 }
 ```
 
+If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress `env` config:
+```json
+{
+  ...
+  "mailHogAuth": {"user": "mailhog username", "pass": "mailhog password"}
+}
+
 
 ## Commands
 ### Mail Collection
-#### mhGetAllMails() 
+#### mhGetAllMails(limit=50) 
 Yields an array of all the mails stored in MailHog.
 ```JavaScript
 cy
   .mhGetAllMails()
   .should('have.length', 1);
 ```
-#### mhGetMailsBySubject( subject ) 
+#### mhGetMailsBySubject( subject, limit=50 ) 
 Yields an array of all mails with given subject.
 ```JavaScript
 cy
   .mhGetMailsBySubject('My Subject')
   .should('have.length', 1);
 ```
-#### mhGetMailsBySender( from ) 
+#### mhGetMailsBySender( from, limit=50) 
 Yields an array of all mails with given sender.
 ```JavaScript
 cy
   .mhGetMailsBySender('sender@example.com')
   .should('have.length', 1);
 ```
-#### mhGetMailsByRecipient( recipient ) 
+#### mhGetMailsByRecipient( recipient, limit=50 ) 
 Yields an array of all mails with given recipient.
 ```JavaScript
 cy
