@@ -29,7 +29,7 @@ If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress 
   ...
   "mailHogAuth": {"user": "mailhog username", "pass": "mailhog password"}
 }
-
+```
 
 ## Commands
 ### Mail Collection
