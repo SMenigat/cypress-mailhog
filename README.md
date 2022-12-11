@@ -6,14 +6,15 @@ This package supports TypeScript out of the box.
 ### Setup
 Install this package via NPM:
 ```bash
-npm install --dev cypress-mailhog
+npm install cypress-mailhog
 ```
 
 Include this package into your Cypress command file:
 ```JavaScript
-// cypress/support/commands.js
+// cypress/support/commands
 import 'cypress-mailhog';
 ```
+###### Before cypress 10.0.0
 
 Add the base url of your MailHog installation to your `cypress.json`:
 ```json
@@ -21,6 +22,18 @@ Add the base url of your MailHog installation to your `cypress.json`:
   ...
   "mailHogUrl": "http://localhost:8090"
 }
+```
+
+###### After cypress 10.0.0
+
+Add the base url of your MailHog installation, add `mailHogUrl` to your cypress e2e config:
+```typescript
+export default defineConfig({
+    projectId: "****",
+    env: { 
+        mailHogUrl: "http://localhost:8090/",
+    }
+})
 ```
 
 If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress `env` config:
