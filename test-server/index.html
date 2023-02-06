@@ -107,18 +107,20 @@
         if (action) {
           setAction(action);
           setStatus('⏳');
-          $.ajax({
-            method: 'POST',
-            url: 'mailer.php',
-            data: {
-              action: action,
-            }
-          }).then(function(response) {
-            setStatus('✅');
-            $('.debug-output').html(response);
-          }).fail(function() {
-            setStatus('🚫');
-          });
+          setTimeout(function () {
+            $.ajax({
+              method: 'POST',
+              url: 'mailer.php',
+              data: {
+                action: action,
+              }
+            }).then(function(response) {
+              setStatus('✅');
+              $('.debug-output').html(response);
+            }).fail(function() {
+              setStatus('🚫');
+            });
+          }, 50) // simulate transport delay
         }
       });
     </script>

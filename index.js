@@ -6,6 +6,49 @@ const mhApiUrl = (path) => {
 
 const mhAuth = Cypress.env('mailHogAuth') || ''
 
+const messages = (limit) => {
+    return cy
+        .request({
+            method: 'GET',
+            url: mhApiUrl(`/v2/messages?limit=${limit}`),
+            auth: mhAuth,
+            log: false,
+        })
+        .then((response) => {
+            if (typeof response.body === 'string') {
+                return JSON.parse(response.body);
+            } else {
+                return response.body;
+            }
+        })
+        .then((parsed) => parsed.items);
+};
+
+const retryFetchMessages = (filter, limit, options = {}) => {
+    const timeout =
+        options.timeout || Cypress.config('defaultCommandTimeout') || 4000;
+    let timedout = false;
+
+    setTimeout(() => {
+        timedout = true;
+    }, timeout);
+
+    const filteredMessages = (limit) => messages(limit).then(filter);
+
+    const resolve = () => {
+        if (timedout) {
+            return filteredMessages(limit);
+        }
+        return filteredMessages(limit).then((messages) => {
+            return cy.verifyUpcomingAssertions(messages, options, {
+                onRetry: resolve,
+            });
+        });
+    };
+
+    return resolve();
+};
+
 Cypress.Commands.add('mhGetJimMode', () => {
   return cy
     .request({
@@ -39,47 +82,41 @@ Cypress.Commands.add('mhDeleteAll', () => {
   })
 })
 
-Cypress.Commands.add('mhGetAllMails', (limit=50) => {
-  return cy
-    .request({
-      method: 'GET',
-      url: mhApiUrl(`/v2/messages?limit=${limit}`),
-      auth: mhAuth
-    })
-    .then((response) => {
-        if (typeof response.body === 'string') {
-            return JSON.parse(response.body);
-        } else {
-            return response.body;
-        }
-    })
-    .then((parsed) => parsed.items);
+Cypress.Commands.add('mhGetAllMails', (limit=50, options={}) => {
+    const filter = (mails) => mails;
+
+    return retryFetchMessages(filter, limit, options);
 });
 
 Cypress.Commands.add('mhFirst', {prevSubject: true}, (mails) => {
   return Array.isArray(mails) && mails.length > 0 ? mails[0] : mails;
 });
 
-Cypress.Commands.add('mhGetMailsBySubject', (subject, limit=50) => {
-  cy.mhGetAllMails(limit).then((mails) => {
-    return mails.filter((mail) => mail.Content.Headers.Subject[0] === subject);
-  });
+Cypress.Commands.add('mhGetMailsBySubject', (subject, limit=50, options={}) => {
+    const filter = (mails) =>
+        mails.filter((mail) => mail.Content.Headers.Subject[0] === subject);
+
+    return retryFetchMessages(filter, limit, options);
 });
 
-Cypress.Commands.add('mhGetMailsByRecipient', (recipient, limit=50) => {
-  cy.mhGetAllMails(limit).then((mails) => {
-    return mails.filter((mail) =>
-      mail.To.map(
-        (recipientObj) => `${recipientObj.Mailbox}@${recipientObj.Domain}`
-      ).includes(recipient)
-    );
-  });
+Cypress.Commands.add(
+    'mhGetMailsByRecipient',
+    (recipient, limit=50, options={}) => {
+    const filter = (mails) => {
+        return mails.filter((mail) =>
+            mail.To.map((recipientObj) =>
+                `${recipientObj.Mailbox}@${recipientObj.Domain}`
+            ).includes(recipient));
+    };
+
+    return retryFetchMessages(filter, limit, options);
 });
 
-Cypress.Commands.add('mhGetMailsBySender', (from, limit=50) => {
-  cy.mhGetAllMails(limit).then((mails) => {
-    return mails.filter((mail) => mail.Raw.From === from);
-  });
+Cypress.Commands.add('mhGetMailsBySender', (from, limit=50, options={}) => {
+    const filter = (mails) =>
+        mails.filter((mail) => mail.Raw.From === from);
+
+    return retryFetchMessages(filter, limit, options);
 });
 
 /**
