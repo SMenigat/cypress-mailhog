@@ -46,21 +46,21 @@ If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress 
 
 ## Commands
 ### Mail Collection
-#### mhGetAllMails(limit=50) 
+#### mhGetAllMails( limit=50, options={timeout=defaultCommandTimeout} ) 
 Yields an array of all the mails stored in MailHog.
 ```JavaScript
 cy
   .mhGetAllMails()
   .should('have.length', 1);
 ```
-#### mhGetMailsBySubject( subject, limit=50 ) 
+#### mhGetMailsBySubject( subject, limit=50, options={timeout=defaultCommandTimeout} ) 
 Yields an array of all mails with given subject.
 ```JavaScript
 cy
   .mhGetMailsBySubject('My Subject')
   .should('have.length', 1);
 ```
-#### mhGetMailsBySender( from, limit=50) 
+#### mhGetMailsBySender( from, limit=50, options={timeout=defaultCommandTimeout} ) 
 Yields an array of all mails with given sender.
 ```JavaScript
 cy
@@ -79,6 +79,7 @@ Yields the first mail of the loaded selection.
 ```JavaScript
 cy
   .mhGetAllMails()
+  .should('have.length', 1)
   .mhFirst();
 ``` 
 #### mhDeleteAll()
@@ -94,6 +95,7 @@ Yields the subject of the current mail.
 ```JavaScript
 cy
   .mhGetAllMails()
+  .should('have.length', 1)  
   .mhFirst()
   .mhGetSubject()
   .should('eq', 'My Mails Subject');
@@ -103,6 +105,7 @@ Yields the body of the current mail.
 ```JavaScript
 cy
   .mhGetAllMails()
+  .should('have.length', 1)
   .mhFirst()
   .mhGetBody()
   .should('contain', 'Part of the Message Body');
@@ -112,6 +115,7 @@ Yields the sender of the current mail.
 ```JavaScript
 cy
   .mhGetAllMails()
+  .should('have.length', 1)
   .mhFirst()
   .mhGetSender()
   .should('eq', 'sender@example.com');
@@ -121,6 +125,7 @@ Yields the recipient of the current mail.
 ```JavaScript
 cy
   .mhGetAllMails()
+  .should('have.length', 1)
   .mhFirst()
   .mhGetRecipients()
   .should('contain', 'recipient@example.com');

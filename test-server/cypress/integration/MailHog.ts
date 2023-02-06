@@ -1,10 +1,10 @@
 const triggerAction = (actionName: string) => {
   return cy
     .get(`[data-action="${actionName}"`)
-    .click()
-    .get('.status-wrapper .status')
-    .contains('✅');
+    .click();
 };
+
+const simulatedTransportDelay = 250;
 
 describe('MailHog', () => {
   before(() => {
@@ -21,6 +21,7 @@ describe('MailHog', () => {
   });
   describe('Mail Collection', () => {
     beforeEach(() => {
+      cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
       cy.mhDeleteAll();
       triggerAction('generate-bulk');
     });
@@ -40,6 +41,7 @@ describe('MailHog', () => {
     });
     it('cy.mhDeleteAll() - delets all mails from MailCatcher', () => {
       cy
+        .wait(simulatedTransportDelay) // make sure to wait for delayed messages before cleaning up
         .mhDeleteAll()
         .mhGetAllMails()
         .should('have.length', 0);
@@ -47,12 +49,14 @@ describe('MailHog', () => {
   });
   describe('Handling a Single Mail ✉️', () => {
     beforeEach(() => {
+      cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
       cy.mhDeleteAll();
       triggerAction('generate-single');
     });
     it('mail.mhGetSubject() - returns the mails subject', () => {
       cy
         .mhGetAllMails()
+        .should('have.length', 1)
         .mhFirst()
         .mhGetSubject()
         .should('eq', 'Single Mail');
@@ -60,6 +64,7 @@ describe('MailHog', () => {
     it('mail.mhGetBody() - returns the message body', () => {
       cy
         .mhGetAllMails()
+        .should('have.length', 1)
         .mhFirst()
         .mhGetBody()
         .should('contain', 'HTML message body');
@@ -67,6 +72,7 @@ describe('MailHog', () => {
     it('mail.mhGetSender() - returns sender', () => {
       cy
         .mhGetAllMails()
+        .should('have.length', 1)
         .mhFirst()
         .mhGetSender()
         .should('equal', 'single@example.com');
@@ -74,6 +80,7 @@ describe('MailHog', () => {
     it('mail.mhGetRecipients() - returns recipients', () => {
       cy
       .mhGetAllMails()
+      .should('have.length', 1)
       .mhFirst()
       .mhGetRecipients()
       .should('contain', 'bcc-recipient@example.com');
