@@ -1,6 +1,6 @@
 {
   "name": "cypress-mailhog",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Cypress Commands for MailHog 🌳🐗",
   "main": "index.js",
   "types": "types/index.d.ts",
@@ -18,7 +18,7 @@
     "MailHog"
   ],
   "author": "Samuel Menigat <samuel.menigat@gmail.com>",
-  "license": "GPL-2.0",
+  "license": "mit",
   "bugs": {
     "url": "https://github.com/SMenigat/cypress-mailhog/issues"
   },
