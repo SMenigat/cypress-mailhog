@@ -56,7 +56,7 @@ or add `mailHogUsername` and `mailHogPassword` in cypress env config
 {
   ...
   "mailHogUsername": "mailhog username",
-  "mailHogPassword": "mailhog password"}
+  "mailHogPassword": "mailhog password"
 }
 ```
 
