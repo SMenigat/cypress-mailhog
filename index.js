@@ -4,7 +4,14 @@ const mhApiUrl = (path) => {
   return `${basePath}/api${path}`;
 };
 
-const mhAuth = Cypress.env('mailHogAuth') || ''
+let mhAuth = Cypress.env('mailHogAuth') || '';
+if (Cypress.env('mailHogUsername') && Cypress.env('mailHogPassword')) {
+  mhAuth = {
+    'user': Cypress.env('mailHogUsername'),
+    'pass': Cypress.env('mailHogPassword'),
+  };
+}
+
 
 const messages = (limit) => {
     return cy
@@ -55,7 +62,7 @@ Cypress.Commands.add('mhGetJimMode', () => {
       method: 'GET',
       url: mhApiUrl('/v2/jim'),
       failOnStatusCode: false,
-      auth: mhAuth
+      auth: mhAuth,
     })
     .then((response) => {
       return cy.wrap(response.status === 200);
@@ -67,7 +74,7 @@ Cypress.Commands.add('mhSetJimMode', (enabled) => {
     method: enabled ? 'POST' : 'DELETE',
     url: mhApiUrl('/v2/jim'),
     failOnStatusCode: false,
-    auth: mhAuth
+    auth: mhAuth,
   });
 });
 
@@ -78,9 +85,9 @@ Cypress.Commands.add('mhDeleteAll', () => {
   return cy.request({
     method: 'DELETE',
     url: mhApiUrl('/v1/messages'),
-    auth: mhAuth
-  })
-})
+    auth: mhAuth,
+  });
+});
 
 Cypress.Commands.add('mhGetAllMails', (limit=50, options={}) => {
     const filter = (mails) => mails;
