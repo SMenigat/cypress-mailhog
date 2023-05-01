@@ -51,6 +51,15 @@ If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress 
 }
 ```
 
+or add `mailHogUsername` and `mailHogPassword` in cypress env config
+```json
+{
+  ...
+  "mailHogUsername": "mailhog username",
+  "mailHogPassword": "mailhog password"}
+}
+```
+
 ## Commands
 ### Mail Collection
 #### mhGetAllMails( limit=50, options={timeout=defaultCommandTimeout} ) 
