@@ -230,7 +230,7 @@ Start docker server.
 docker-compose up
 ```
 
-Open the Testpage in your browser: [http://localhost:8080/cypress-mh-tests/](http://localhost:8080/cypress-mc-tests/)
+Open the Testpage in your browser: [http://localhost:8080/cypress-mh-tests/](http://localhost:8080/cypress-mh-tests/)
 Open MailHog in your browser: [http://localhost:8090/](http://localhost:8090/)
 
 Open the Cypress testclient.
