@@ -1,6 +1,7 @@
 # cypress-mailhog
 
-A collection of usefull Cypress commands for MailHog 🐗.
+A collection of useful Cypress commands for MailHog 🐗.
+
 This package supports TypeScript out of the box. 
 
 ### Setup
@@ -31,7 +32,7 @@ Add the base url of your MailHog installation to your `cypress.json`:
 
 ###### After cypress 10.0.0
 
-Add the base url of your MailHog installation, add `mailHogUrl` to your cypress e2e config:
+Add the base url of your MailHog installation in the `e2e` block of your `cypress.config.ts` / `cypress.config.js`:
 
 ```typescript
 export default defineConfig({
@@ -42,7 +43,7 @@ export default defineConfig({
 })
 ```
 
-If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress `env` config:
+If your MailHog instance uses authentication, add `mailHogAuth` to your cypress `env` config:
 
 ```json
 {
@@ -52,6 +53,7 @@ If your Mailhog instance uses authentication, add `mailHogAuth` to your cypress 
 ```
 
 or add `mailHogUsername` and `mailHogPassword` in cypress env config
+
 ```json
 {
   ...
@@ -239,7 +241,8 @@ Start docker server.
 docker-compose up
 ```
 
-Open the Testpage in your browser: [http://localhost:3000/cypress-mh-tests/](http://localhost:3000/cypress-mh-tests/)
+Open the test page in your browser: [http://localhost:3000/cypress-mh-tests/](http://localhost:3000/cypress-mh-tests/)
+
 Open MailHog in your browser: [http://localhost:8090/](http://localhost:8090/)
 
 Open the Cypress testclient.
