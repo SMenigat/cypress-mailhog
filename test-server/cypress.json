@@ -1,4 +1,0 @@
-{
-  "baseUrl": "http://localhost:8080/cypress-mh-tests/",
-  "mailHogUrl": "http://localhost:8090"
-}

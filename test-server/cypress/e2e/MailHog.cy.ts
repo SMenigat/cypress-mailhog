@@ -7,13 +7,13 @@ const triggerAction = (actionName: string) => {
 const simulatedTransportDelay = 250;
 
 describe('MailHog', () => {
-  before(() => {
+  beforeEach(() => {
     cy
       .visit('/')
       .mhDeleteAll()
       .mhSetJimMode(false);
   });
-  after(() => {
+  afterEach(() => {
     cy.mhDeleteAll().mhSetJimMode(false);
   });
   it('loads the page', () => {

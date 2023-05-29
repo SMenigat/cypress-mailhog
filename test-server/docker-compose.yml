@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-   image: webdevops/php-apache-dev:7.1
+   image: webdevops/php-apache-dev:7.4
    depends_on:
      - mailhog
    links:
@@ -9,7 +9,7 @@ services:
    volumes:
      - ./:/var/www/html/cypress-mh-tests/
    ports:
-     - "8080:80"
+     - "3000:80"
    environment:
      - PHP_DISPLAY_ERRORS=E_ALL
      - WEB_DOCUMENT_ROOT=/var/www/html
@@ -19,5 +19,6 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    platform: linux/amd64
     ports:
       - "8090:8025" 

@@ -1,4 +1,7 @@
 declare namespace Cypress {
+  interface EndToEndConfigOptions {
+    mailHogUrl?: string;
+  }
   interface Chainable {
     mhGetJimMode(): Chainable<boolean>;
     mhSetJimMode(enabled: boolean): Chainable<Cypress.Response<any>>;
