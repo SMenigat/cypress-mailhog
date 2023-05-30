@@ -1,6 +1,6 @@
 {
   "name": "cypress-mailhog",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Cypress Commands for MailHog 🌳🐗",
   "main": "index.js",
   "types": "types/index.d.ts",
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/SMenigat/cypress-mailhog#readme",
   "devDependencies": {
-    "cypress": "7.6.0",
+    "cypress": "12.13.0",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "prettier": "^1.11.1",
