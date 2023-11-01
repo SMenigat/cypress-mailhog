@@ -123,12 +123,10 @@ Cypress.Commands.add(
   'mhGetMailsByRecipientSubject',
   (recipient, subject, limit=50, options={}) => {
   const filter = (mails) => {
-      let mail = mails.filter((mail) =>
+      return mails.filter((mail) =>
           mail.To.map((recipientObj) =>
               `${recipientObj.Mailbox}@${recipientObj.Domain}`
           ).includes(recipient)).filter(mail => mail.Content.Headers.Subject[0] === subject);
-        console.warn(mail);
-        return mail;
         };
     return retryFetchMessages(filter, limit, options);
 });
