@@ -9,6 +9,7 @@ declare namespace Cypress {
     mhGetAllMails(limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
     mhFirst(): Chainable<mailhog.Item>;
     mhGetMailsBySubject(subject: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
+    mhGetMailsByRecipientSubject(recipient: string, subject: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
     mhGetMailsByRecipient(recipient: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
     mhGetMailsBySender(from: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
     mhGetSubject(): Chainable<string>;
