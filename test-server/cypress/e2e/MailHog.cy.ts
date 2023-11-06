@@ -35,7 +35,7 @@ describe("MailHog", () => {
       );
     });
     it("cy.mhDeleteAll() - delets all mails from MailCatcher", () => {
-      cy.wait(simulatedTransportDelay) // make sure to wait for delayed messages before cleaning up
+      cy.mhWaitForMails(9)
         .mhDeleteAll()
         .mhGetAllMails()
         .should("have.length", 0);
@@ -111,7 +111,21 @@ describe("MailHog", () => {
         .mhGetRecipients()
         .should("contain", "bcc-recipient@example.com");
     });
-    it("mail.mhHasAttachment() - asserts if mail has attachment");
+    describe("Attachment Handling", () => {
+      beforeEach(() => {
+        cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
+        cy.mhDeleteAll();
+        triggerAction("generate-single-with-attachment");
+      });
+      it("mail.mhGetAttachments() - returns list of attachments for current mail", () => {
+        cy.mhWaitForMails()
+          .mhGetAllMails()
+          .mhFirst()
+          .mhGetAttachments()
+          .should("have.length", 2)
+          .should("include", "sample.pdf");
+      });
+    });
   });
   describe("Asserting the Mail Collection 🔍", () => {
     beforeEach(() => {
@@ -147,7 +161,7 @@ describe("MailHog", () => {
         .should("eq", false);
     });
   });
-  describe.only("General Helper Functions", () => {
+  describe("General Helper Functions", () => {
     beforeEach(() => {
       cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
       cy.mhDeleteAll();

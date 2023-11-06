@@ -58,6 +58,7 @@ class Mails
     $mail = $this->createMail();
     $mail->Subject = 'Mail with Attachment';
     $mail->addAttachment(__DIR__ . '/../attachment.txt');
+    $mail->addAttachment(__DIR__ . '/../sample.pdf');
     $mail->send();
   }
 
