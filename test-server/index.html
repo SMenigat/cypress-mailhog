@@ -1,128 +1,133 @@
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <style>
 
-      body {
-        font-family: monospace;
-      }
+<head>
+  <meta charset="UTF-8">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: monospace;
+    }
 
-      .status-wrapper {
-        border-radius: 2;
-        border: 1px solid lightgray;
-      }
+    .status-wrapper {
+      border-radius: 2;
+      border: 1px solid lightgray;
+    }
 
-      .status-wrapper > div {
-        padding: 4px;
-        margin: 0;
-        min-height: 24px;
+    .status-wrapper>div {
+      padding: 4px;
+      margin: 0;
+      min-height: 24px;
 
-        display: flex;
-        align-items: center;
-      }
+      display: flex;
+      align-items: center;
+    }
 
-      .status-wrapper > div + div {
-        border-top: 1px solid lightgray;
-      }
+    .status-wrapper>div+div {
+      border-top: 1px solid lightgray;
+    }
 
-      .status-wrapper > div .label {
-        width: 150px;
-        flex-shrink: 0;
-      }
+    .status-wrapper>div .label {
+      width: 150px;
+      flex-shrink: 0;
+    }
 
-      .status-wrapper > div .value {
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        flex-grow: 1;
-      }
+    .status-wrapper>div .value {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      flex-grow: 1;
+    }
 
-      .action-wrapper {
-        padding: 16px;
-      }
+    .action-wrapper {
+      padding: 16px;
+    }
 
-      .action-wrapper > button {
-        display: block;
-        margin: 16px 0px;
-      }
+    .action-wrapper>button {
+      display: block;
+      margin: 16px 0px;
+    }
 
-      .debug-output {
-        height: 200px;
-        width: 100%;
-        resize: none;
-        font-family: monospace;
-        font-size: 11px;
-        overflow: auto;
-        white-space: pre-line;
-        border: 1px dotted lightgray;
-        padding: 8px;
-        border-radius: 2px;
-      }
-    </style>
-  </head><body>
-    <div class="status-wrapper">
-      <div>
-        <div class="label">Triggered Action: </div>
-        <div class="value action">-</div>
-      </div><div>
-        <div class="label">Debug Output: </div>
-        <div class="value">
-          <pre class="debug-output" readonly></pre>
-        </div>
-      </div>
-      <div>
-        <div class="label">Status:</div>
-        <div class="value status">💤</div>
+    .debug-output {
+      height: 200px;
+      width: 100%;
+      resize: none;
+      font-family: monospace;
+      font-size: 11px;
+      overflow: auto;
+      white-space: pre-line;
+      border: 1px dotted lightgray;
+      padding: 8px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="status-wrapper">
+    <div>
+      <div class="label">Triggered Action: </div>
+      <div class="value action">-</div>
+    </div>
+    <div>
+      <div class="label">Debug Output: </div>
+      <div class="value">
+        <pre class="debug-output" readonly></pre>
       </div>
     </div>
-    <div class="action-wrapper"></div>
-    <script>
-      // render buttons
-      var actions = [
-        { action: 'generate-single', label: 'Generate Single' },
-        { action: 'generate-single-with-attachment', label: 'Generate Single with Attachment' },
-        { action: 'generate-bulk', label: 'Generate Multiple' },
-      ];
+    <div>
+      <div class="label">Status:</div>
+      <div class="value status">💤</div>
+    </div>
+  </div>
+  <div class="action-wrapper"></div>
+  <script>
+    // render buttons
+    var actions = [
+      { action: 'generate-single', label: 'Generate Single' },
+      { action: 'generate-single-with-attachment', label: 'Generate Single with Attachment' },
+      { action: 'generate-bulk', label: 'Generate Multiple' },
+      { action: 'generate-bulk-unique', label: 'Generate Unique Batch' },
+    ];
 
 
-      var $actions = $('.action-wrapper');
-      $.each(actions, function(index, action) {
-        var $newButton = $('<button />')
-          .attr('data-action', action.action)
-          .text(action.label);
-        $actions.append($newButton);
-      });
+    var $actions = $('.action-wrapper');
+    $.each(actions, function (index, action) {
+      var $newButton = $('<button />')
+        .attr('data-action', action.action)
+        .text(action.label);
+      $actions.append($newButton);
+    });
 
 
-      function setStatus(status) {
-        $('.status').text(status);
+    function setStatus(status) {
+      $('.status').text(status);
+    }
+    function setAction(action) {
+      $('.action').text(action);
+    }
+    $('button').click(function () {
+      var action = $(this).data('action');
+      if (action) {
+        setAction(action);
+        setStatus('⏳');
+        setTimeout(function () {
+          $.ajax({
+            method: 'POST',
+            url: 'mailer.php',
+            data: {
+              action: action,
+            }
+          }).then(function (response) {
+            setStatus('✅');
+            $('.debug-output').html(response);
+          }).fail(function () {
+            setStatus('🚫');
+          });
+        }, 50) // simulate transport delay
       }
-      function setAction(action) {
-        $('.action').text(action);
-      }
-      $('button').click(function() {
-        var action = $(this).data('action');
-        if (action) {
-          setAction(action);
-          setStatus('⏳');
-          setTimeout(function () {
-            $.ajax({
-              method: 'POST',
-              url: 'mailer.php',
-              data: {
-                action: action,
-              }
-            }).then(function(response) {
-              setStatus('✅');
-              $('.debug-output').html(response);
-            }).fail(function() {
-              setStatus('🚫');
-            });
-          }, 50) // simulate transport delay
-        }
-      });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>
