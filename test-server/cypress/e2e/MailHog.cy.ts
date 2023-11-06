@@ -41,7 +41,7 @@ describe("MailHog", () => {
         .should("have.length", 0);
     });
   });
-  describe.only("Filter Mail Collection", () => {
+  describe("Filter Mail Collection", () => {
     beforeEach(() => {
       cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
       cy.mhDeleteAll();
@@ -64,6 +64,17 @@ describe("MailHog", () => {
         .mhGetAllMails()
         .mhFilterByRecipient("recipient-4@example.com")
         .should("have.length", 1);
+    });
+    it("allows to chain filters together", () => {
+      cy.wait(1000)
+        .mhGetAllMails()
+        .mhFilterByRecipient("bcc-recipient@example.com")
+        .mhFilterBySubject("Unique Mail 4/10")
+        .as("filteredMails")
+        .should("have.length", 1)
+        .get("@filteredMails")
+        .mhFilterBySender("sender-1@example.com")
+        .should("have.length", 0);
     });
   });
   describe("Handling a Single Mail ✉️", () => {
