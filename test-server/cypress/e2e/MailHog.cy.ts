@@ -147,4 +147,17 @@ describe("MailHog", () => {
         .should("eq", false);
     });
   });
+  describe.only("General Helper Functions", () => {
+    beforeEach(() => {
+      cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
+      cy.mhDeleteAll();
+      triggerAction("generate-bulk-unique");
+    });
+    it("cy.mhWaitForMails(moreMailsThen) - waits for a certain nr of mails to be on server", () => {
+      cy.mhWaitForMails(9)
+        .mhGetAllMails()
+        .mhFilterBySender("single-10@example.com")
+        .should("have.length", 1);
+    });
+  });
 });

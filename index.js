@@ -201,3 +201,10 @@ Cypress.Commands.add("mhHasMailFrom", (from) => {
 Cypress.Commands.add("mhHasMailTo", (recipient) => {
   cy.mhGetMailsByRecipient(recipient).should("not.have.length", 0);
 });
+
+/**
+ * Helpers
+ */
+Cypress.Commands.add("mhWaitForMails", (moreMailsThen = 0) => {
+  cy.mhGetAllMails().should("to.have.length.greaterThan", moreMailsThen);
+});
