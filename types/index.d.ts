@@ -6,17 +6,35 @@ declare namespace Cypress {
     mhGetJimMode(): Chainable<boolean>;
     mhSetJimMode(enabled: boolean): Chainable<Cypress.Response<any>>;
     mhDeleteAll(): Chainable<Cypress.Response<any>>;
-    mhGetAllMails(limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
+    mhGetAllMails(
+      limit?: number,
+      options?: Partial<Timeoutable>
+    ): Chainable<mailhog.Item[]>;
     mhFirst(): Chainable<mailhog.Item>;
-    mhGetMailsBySubject(subject: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
-    mhGetMailsByRecipient(recipient: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
-    mhGetMailsBySender(from: string, limit?: number, options?: Partial<Timeoutable>): Chainable<mailhog.Item[]>;
+    mhGetMailsBySubject(
+      subject: string,
+      limit?: number,
+      options?: Partial<Timeoutable>
+    ): Chainable<mailhog.Item[]>;
+    mhGetMailsByRecipient(
+      recipient: string,
+      limit?: number,
+      options?: Partial<Timeoutable>
+    ): Chainable<mailhog.Item[]>;
+    mhGetMailsBySender(
+      from: string,
+      limit?: number,
+      options?: Partial<Timeoutable>
+    ): Chainable<mailhog.Item[]>;
+    mhFilterBySubject(subject: string): Chainable<mailhog.Item[]>;
+    mhFilterByRecipient(recipient: string): Chainable<mailhog.Item[]>;
+    mhFilterBySender(from: string): Chainable<mailhog.Item[]>;
     mhGetSubject(): Chainable<string>;
     mhGetBody(): Chainable<string>;
     mhGetSender(): Chainable<string>;
     mhGetRecipients(): Chainable<string[]>;
-    mhHasMailWithSubject(subject : string): Chainable;
-    mhHasMailFrom(from : string): Chainable;
+    mhHasMailWithSubject(subject: string): Chainable;
+    mhHasMailFrom(from: string): Chainable;
     mhHasMailTo(recipient: string): Chainable;
   }
 }
