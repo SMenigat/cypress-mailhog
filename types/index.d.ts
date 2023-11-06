@@ -36,5 +36,6 @@ declare namespace Cypress {
     mhHasMailWithSubject(subject: string): Chainable;
     mhHasMailFrom(from: string): Chainable;
     mhHasMailTo(recipient: string): Chainable;
+    mhWaitForMails(moreMailsThen?: number): Chainable;
   }
 }
