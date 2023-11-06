@@ -236,6 +236,20 @@ cy
   .should('contain', 'recipient@example.com');
 ```
 
+#### mhGetAttachments()
+
+Yields the list of all file names of the attachments of the current mail.
+
+```JavaScript
+cy
+  .mhGetAllMails()
+  .should('have.length', 1)
+  .mhFirst()
+  .mhGetAttachments()
+  .should('have.length', 2)
+  .should('include', 'sample.pdf');
+```
+
 ### Asserting the Mail Collection 🔍
 
 #### mhHasMailWithSubject( subject )
