@@ -132,7 +132,7 @@ Deletes all stored mails from MailHog.
 cy.mhDeleteAll();
 ```
 
-### Collection Filtering
+### Collection Filtering 🪮
 
 **Note:** the below described filter functions can be chained together to build complex filters. They are currently not automatically retrying. So make sure to either wait a certain time before fetching your mails or to implement you own re-try logic.
 
@@ -260,6 +260,22 @@ Asserts if there is a mail to given recipient (looks for "To", "CC" and "BCC").
 
 ```JavaScript
 cy.mhHasMailTo('recipient@example.com');
+```
+
+### Helper Functions ⚙️
+
+#### mhWaitForMails( moreMailsThen = 0 )
+
+Waits until more then <`moreMailsThen`> mails are available on mailhog.
+This is especially useful when using the `mhFilterBy<X>` functions, since they do not support automatic retrying.
+
+```JavaScript
+// this waits until there are at least 10 mails on mailhog
+cy
+  .mhWaitForMails(9)
+  .mhGetAllMails()
+  .mhFilterBySender("sender-10@example.com")
+  .should("have.length", 1);
 ```
 
 ### Jim Chaos Monkey 🐵
