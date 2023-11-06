@@ -208,3 +208,39 @@ Cypress.Commands.add("mhHasMailTo", (recipient) => {
 Cypress.Commands.add("mhWaitForMails", (moreMailsThen = 0) => {
   cy.mhGetAllMails().should("to.have.length.greaterThan", moreMailsThen);
 });
+
+/**
+ * Attachments
+ */
+Cypress.Commands.add("mhGetAttachments", { prevSubject: true }, (mail) => {
+  const attachments = [];
+
+  // search through mime parts to find attachments
+  if (Array.isArray(mail.MIME?.Parts)) {
+    for (const mimePart of mail.MIME?.Parts) {
+      // content disposition tells us if this part represents an attachment
+      // sample: Content-Disposition: ["attachment; filename=sample.pdf"]
+      if (
+        mimePart.Headers &&
+        mimePart.Headers["Content-Disposition"] &&
+        mimePart.Headers["Content-Disposition"][0]
+      ) {
+        const contentDisposition = mimePart.Headers["Content-Disposition"][0];
+        if (contentDisposition) {
+          const dispositionTokens = contentDisposition
+            .split(";")
+            .map((token) => token.trim());
+          if (dispositionTokens.includes("attachment")) {
+            const fileNameToken = dispositionTokens.find((token) =>
+              token.startsWith("filename=")
+            );
+            const fileName = fileNameToken.replace("filename=", "");
+            attachments.push(fileName);
+          }
+        }
+      }
+    }
+  }
+
+  return cy.wrap(attachments);
+});

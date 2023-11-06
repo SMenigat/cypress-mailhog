@@ -33,6 +33,7 @@ declare namespace Cypress {
     mhGetBody(): Chainable<string>;
     mhGetSender(): Chainable<string>;
     mhGetRecipients(): Chainable<string[]>;
+    mhGetAttachments(): Chainable<string[]>;
     mhHasMailWithSubject(subject: string): Chainable;
     mhHasMailFrom(from: string): Chainable;
     mhHasMailTo(recipient: string): Chainable;
