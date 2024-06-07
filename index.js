@@ -1,7 +1,8 @@
 const mhApiUrl = (path) => {
   const envValue = Cypress.env("mailHogUrl");
   const basePath = envValue ? envValue : Cypress.config("mailHogUrl");
-  return `${basePath}/api${path}`;
+  const trimmedBasePath = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+  return `${trimmedBasePath}/api${path}`;
 };
 
 let mhAuth = Cypress.env("mailHogAuth") || "";
