@@ -1,4 +1,6 @@
 declare namespace mailhog {
+ type SearchKind = 'from' | 'to' | 'containing';
+
   interface Messages {
     total: number;
     count: number;

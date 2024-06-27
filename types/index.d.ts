@@ -26,6 +26,12 @@ declare namespace Cypress {
       limit?: number,
       options?: Partial<Timeoutable>
     ): Chainable<mailhog.Item[]>;
+    mhSearchMails(
+      kind: mailhog.SearchKind,
+      query: string,
+      limit?: number,
+      options?: Partial<Timeoutable>
+    ): Chainable<mailhog.Item[]>;
     mhFilterBySubject(subject: string): Chainable<mailhog.Item[]>;
     mhFilterByRecipient(recipient: string): Chainable<mailhog.Item[]>;
     mhFilterBySender(from: string): Chainable<mailhog.Item[]>;
