@@ -5,7 +5,7 @@ declare namespace Cypress {
   interface Chainable {
     mhGetJimMode(): Chainable<boolean>;
     mhSetJimMode(enabled: boolean): Chainable<Cypress.Response<any>>;
-    mhDeleteAll(): Chainable<Cypress.Response<any>>;
+    mhDeleteAll(options?: Partial<Timeoutable>): Chainable<Cypress.Response<any>>;
     mhGetAllMails(
       limit?: number,
       options?: Partial<Timeoutable>
