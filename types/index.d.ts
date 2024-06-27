@@ -62,7 +62,7 @@ declare namespace mailhog {
      From: From;
      To: From[];
      Content: Content;
-     Created: Date;
+     Created: string;
      MIME: MimeParts | null;
      Raw: Raw;
    }
