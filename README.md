@@ -85,7 +85,7 @@ cy
 
 #### mhGetMailsBySubject( subject, limit=50, options={timeout=defaultCommandTimeout} )
 
-Yields an array of all mails with given subject. This retries automatically until mails are found (or until timeout is reached).
+Fetches all mails from MailHog and yields an array of all mails with given subject. This retries automatically until mails are found (or until timeout is reached).
 
 ```JavaScript
 cy
@@ -95,7 +95,7 @@ cy
 
 #### mhGetMailsBySender( from, limit=50, options={timeout=defaultCommandTimeout} )
 
-Yields an array of all mails with given sender. This retries automatically until mails are found (or until timeout is reached).
+Fetches all mails from MailHog and yields an array of all mails with given sender. This retries automatically until mails are found (or until timeout is reached).
 
 ```JavaScript
 cy
@@ -105,7 +105,7 @@ cy
 
 #### mhGetMailsByRecipient( recipient, limit=50 )
 
-Yields an array of all mails with given recipient.
+Fetches all mails from MailHog and yields an array of all mails with given recipient.
 
 ```JavaScript
 cy
@@ -130,6 +130,23 @@ Deletes all stored mails from MailHog.
 
 ```JavaScript
 cy.mhDeleteAll();
+
+```
+
+### Mail Searching
+
+#### mhSearchMails( kind, query, limit=50, options={timeout=defaultCommandTimeout} )
+
+Yields an array of mails matching the search query. This retries automatically until mails are found (or until timeout is reached).
+
+Possible search kinds are `from` (sender), `to` (recipient) or `containing` (subject).
+
+```JavaScript
+cy
+  .mhSearchMails('containing', 'My favorite subject')
+  .should('have.length', 1)
+  .mhFirst();
+
 ```
 
 ### Collection Filtering 🪮
@@ -280,11 +297,11 @@ cy.mhHasMailTo('recipient@example.com');
 
 #### mhWaitForMails( moreMailsThen = 0 )
 
-Waits until more then <`moreMailsThen`> mails are available on mailhog.
+Waits until more then <`moreMailsThen`> mails are available on MailHog.
 This is especially useful when using the `mhFilterBy<X>` functions, since they do not support automatic retrying.
 
 ```JavaScript
-// this waits until there are at least 10 mails on mailhog
+// this waits until there are at least 10 mails on MailHog
 cy
   .mhWaitForMails(9)
   .mhGetAllMails()

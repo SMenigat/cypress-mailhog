@@ -12,11 +12,16 @@ if (Cypress.env("mailHogUsername") && Cypress.env("mailHogPassword")) {
   };
 }
 
-const messages = (limit) => {
+/**
+ * Gets unfiltered emails from mailhog.
+ * @param {number} limit The maximum number of emails to get. 
+ * @returns {Promise<any>} The emails.
+ */
+const getMessages = (limit) => {
   return cy
     .request({
       method: "GET",
-      url: mhApiUrl(`/v2/messages?limit=${limit}`),
+      url: mhApiUrl(`/v2/messages?limit=${encodeURIComponent(limit)}`),
       auth: mhAuth,
       log: false,
     })
@@ -30,7 +35,40 @@ const messages = (limit) => {
     .then((parsed) => parsed.items);
 };
 
-const retryFetchMessages = (filter, limit, options = {}) => {
+/**
+ * Gets emails on mailhog that match the specified search query.
+ * @param {'from' | 'to' | 'containing'} kind The search kind.
+ * @param {string} query The search query.
+ * @param {number} limit The maximum number of emails to get.
+ * @returns {Promise<any>} The emails.
+ */
+const searchMessages = (kind, query, limit) => {
+  return cy
+    .request({
+      method: "GET",
+      url: mhApiUrl(`/v2/search?kind=${encodeURIComponent(kind)}&query=${encodeURIComponent(query)}&limit=${encodeURIComponent(limit)}`),
+      auth: mhAuth,
+      log: false,
+    })
+    .then((response) => {
+      if (typeof response.body === "string") {
+        return JSON.parse(response.body);
+      } else {
+        return response.body;
+      }
+    })
+    .then((parsed) => parsed.items);
+};
+
+/**
+ * Fetches messages from mailhog with retryability.
+ * @param {(limit: number) => Promise<any>} fetcher The function to fetch the emails.
+ * @param {(mails: any) => any} filter The filter to apply to the feteched emails.
+ * @param {number} limit The maximum number of emails to fetch.
+ * @param {{timeout?: number}} options The request options.
+ * @returns {Promise<any>} The emails.
+ */
+const retryFetchMessages = (fetcher, filter, limit, options = {}) => {
   const timeout =
     options.timeout || Cypress.config("defaultCommandTimeout") || 4000;
   let timedout = false;
@@ -39,7 +77,7 @@ const retryFetchMessages = (filter, limit, options = {}) => {
     timedout = true;
   }, timeout);
 
-  const filteredMessages = (limit) => messages(limit).then(filter);
+  const filteredMessages = (limit) => fetcher(limit).then(filter);
 
   const resolve = () => {
     if (timedout) {
@@ -91,7 +129,7 @@ Cypress.Commands.add("mhDeleteAll", (options) => {
 Cypress.Commands.add("mhGetAllMails", (limit = 50, options = {}) => {
   const filter = (mails) => mails;
 
-  return retryFetchMessages(filter, limit, options);
+  return retryFetchMessages(getMessages, filter, limit, options);
 });
 
 Cypress.Commands.add("mhFirst", { prevSubject: true }, (mails) => {
@@ -104,7 +142,7 @@ Cypress.Commands.add(
     const filter = (mails) =>
       mails.filter((mail) => mail.Content.Headers.Subject[0] === subject);
 
-    return retryFetchMessages(filter, limit, options);
+    return retryFetchMessages(getMessages, filter, limit, options);
   }
 );
 
@@ -119,15 +157,22 @@ Cypress.Commands.add(
       );
     };
 
-    return retryFetchMessages(filter, limit, options);
+    return retryFetchMessages(getMessages, filter, limit, options);
   }
 );
 
 Cypress.Commands.add("mhGetMailsBySender", (from, limit = 50, options = {}) => {
   const filter = (mails) => mails.filter((mail) => mail.Raw.From === from);
 
-  return retryFetchMessages(filter, limit, options);
+  return retryFetchMessages(getMessages, filter, limit, options);
 });
+
+Cypress.Commands.add("mhSearchMails", (kind, query, limit = 50, options = {}) => {
+  const filter = (mails) => mails;
+  const fetcher = limit => searchMessages(kind, query, limit);
+  return retryFetchMessages(fetcher, filter, limit, options);
+});
+
 
 /** Filters on Mail Collections */
 
