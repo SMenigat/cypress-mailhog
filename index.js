@@ -77,14 +77,14 @@ Cypress.Commands.add("mhSetJimMode", (enabled) => {
   });
 });
 
-/**
- * Mail Collection
- */
-Cypress.Commands.add("mhDeleteAll", () => {
+/** Mail Collection */
+
+Cypress.Commands.add("mhDeleteAll", (options) => {
   return cy.request({
     method: "DELETE",
     url: mhApiUrl("/v1/messages"),
     auth: mhAuth,
+    timeout: options.timeout || Cypress.config('responseTimeout') || 30000,
   });
 });
 
@@ -129,9 +129,8 @@ Cypress.Commands.add("mhGetMailsBySender", (from, limit = 50, options = {}) => {
   return retryFetchMessages(filter, limit, options);
 });
 
-/**
- * Filters on Mail Collections
- */
+/** Filters on Mail Collections */
+
 Cypress.Commands.add(
   "mhFilterBySubject",
   { prevSubject: true },
@@ -162,9 +161,8 @@ Cypress.Commands.add(
   }
 );
 
-/**
- * Single Mail Commands and Assertions
- */
+/** Single Mail Commands and Assertions */
+
 Cypress.Commands.add("mhGetSubject", { prevSubject: true }, (mail) => {
   return cy.wrap(mail.Content.Headers).then((headers) => headers.Subject[0]);
 });
@@ -187,9 +185,8 @@ Cypress.Commands.add("mhGetRecipients", { prevSubject: true }, (mail) => {
     );
 });
 
-/**
- * Mail Collection Assertions
- */
+/** Mail Collection Assertions */
+
 Cypress.Commands.add("mhHasMailWithSubject", (subject) => {
   cy.mhGetMailsBySubject(subject).should("not.have.length", 0);
 });
@@ -202,16 +199,14 @@ Cypress.Commands.add("mhHasMailTo", (recipient) => {
   cy.mhGetMailsByRecipient(recipient).should("not.have.length", 0);
 });
 
-/**
- * Helpers
- */
+/** Helpers */
+
 Cypress.Commands.add("mhWaitForMails", (moreMailsThen = 0) => {
   cy.mhGetAllMails().should("to.have.length.greaterThan", moreMailsThen);
 });
 
-/**
- * Attachments
- */
+/** Attachments */
+
 Cypress.Commands.add("mhGetAttachments", { prevSubject: true }, (mail) => {
   const attachments = [];
 

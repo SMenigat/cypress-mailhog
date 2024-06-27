@@ -124,7 +124,7 @@ cy
   .mhFirst();
 ```
 
-#### mhDeleteAll()
+#### mhDeleteAll(options={timeout=requestTimeout})
 
 Deletes all stored mails from MailHog.
 
