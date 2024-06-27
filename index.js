@@ -117,7 +117,7 @@ Cypress.Commands.add("mhSetJimMode", (enabled) => {
 
 /** Mail Collection */
 
-Cypress.Commands.add("mhDeleteAll", (options) => {
+Cypress.Commands.add("mhDeleteAll", (options = {}) => {
   return cy.request({
     method: "DELETE",
     url: mhApiUrl("/v1/messages"),
