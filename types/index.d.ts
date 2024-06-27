@@ -46,3 +46,53 @@ declare namespace Cypress {
     mhWaitForMails(moreMailsThen?: number): Chainable;
   }
 }
+
+declare namespace mailhog {
+  type SearchKind = 'from' | 'to' | 'containing';
+ 
+   interface Messages {
+     total: number;
+     count: number;
+     start: number;
+     items: Item[];
+   }
+ 
+   interface Item {
+     ID: string;
+     From: From;
+     To: From[];
+     Content: Content;
+     Created: Date;
+     MIME: MimeParts | null;
+     Raw: Raw;
+   }
+ 
+   interface Content {
+     Headers: Headers;
+     Body: string;
+     Size: number;
+     MIME: MimeParts | null;
+   }
+ 
+   interface Headers {
+    [key: string]: string[]
+   }
+ 
+   interface From {
+     Relays: null;
+     Mailbox: string;
+     Domain: string;
+     Params: string;
+   }
+ 
+   interface Raw {
+     From: string;
+     To: string[];
+     Data: string;
+     Helo: string;
+   }
+ 
+   interface MimeParts {
+     Parts: Content[];
+   }
+ }
