@@ -26,19 +26,6 @@ Include this package into your Cypress command file:
 import 'cypress-mailhog';
 ```
 
-###### Before cypress 10.0.0
-
-Add the base url of your MailHog installation to your `cypress.json`:
-
-```json
-{
-  ...
-  "mailHogUrl": "http://localhost:8090"
-}
-```
-
-###### After cypress 10.0.0
-
 Add the base url of your MailHog installation in the `e2e` block of your `cypress.config.ts` / `cypress.config.js`:
 
 ```typescript
@@ -49,6 +36,8 @@ export default defineConfig({
   },
 });
 ```
+
+### MailHog authentication (Basic Auth)
 
 If your MailHog instance uses authentication, add `mailHogAuth` to your cypress `env` config:
 
