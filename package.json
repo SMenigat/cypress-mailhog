@@ -18,7 +18,7 @@
     "MailHog"
   ],
   "author": "Samuel Menigat <samuel.menigat@gmail.com>",
-  "license": "mit",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/SMenigat/cypress-mailhog/issues"
   },
