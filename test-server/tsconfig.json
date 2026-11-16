@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "moduleResolution": "node",
+    "target": "es2020",
     "lib": [
-      "es5",
+      "es2020",
       "dom"
     ],
     "types": [

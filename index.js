@@ -1,16 +1,50 @@
-const mhApiUrl = (path) => {
-  const envValue = Cypress.env("mailHogUrl");
-  const basePath = envValue ? envValue : Cypress.config("mailHogUrl");
-  return new URL(`api${path}`, basePath).href;
+/**
+ * Resolves the MailHog base url.
+ * Lookup order: `expose.mailHogUrl` -> `env.mailHogUrl` -> `e2e.mailHogUrl` (config).
+ * @param {Record<string, any>} env Values yielded by `cy.env()`.
+ * @returns {string} The base url.
+ */
+const mhBaseUrl = (env) =>
+  Cypress.expose("mailHogUrl") ||
+  env.mailHogUrl ||
+  Cypress.config("mailHogUrl");
+
+/**
+ * Resolves the MailHog basic auth credentials from `cy.env()` values.
+ * @param {Record<string, any>} env Values yielded by `cy.env()`.
+ * @returns {{user: string, pass: string} | undefined} The auth options.
+ */
+const mhAuth = (env) => {
+  if (env.mailHogUsername && env.mailHogPassword) {
+    return { user: env.mailHogUsername, pass: env.mailHogPassword };
+  }
+  return env.mailHogAuth || undefined;
 };
 
-let mhAuth = Cypress.env("mailHogAuth") || "";
-if (Cypress.env("mailHogUsername") && Cypress.env("mailHogPassword")) {
-  mhAuth = {
-    user: Cypress.env("mailHogUsername"),
-    pass: Cypress.env("mailHogPassword"),
-  };
-}
+const MH_ENV_KEYS = [
+  "mailHogUrl",
+  "mailHogAuth",
+  "mailHogUsername",
+  "mailHogPassword",
+];
+
+/**
+ * Sends a request to the MailHog API.
+ * Credentials are read via `cy.env()` so they never need to be exposed to the browser.
+ * @param {string} path The API path, e.g. `/v2/messages`.
+ * @param {Partial<Cypress.RequestOptions>} options Additional request options.
+ * @returns {Cypress.Chainable<Cypress.Response<any>>} The response.
+ */
+const mhRequest = (path, options = {}) => {
+  return cy.env(MH_ENV_KEYS, { log: false }).then((env) => {
+    const auth = mhAuth(env);
+    return cy.request({
+      url: new URL(`api${path}`, mhBaseUrl(env)).href,
+      ...(auth ? { auth } : {}),
+      ...options,
+    });
+  });
+};
 
 /**
  * Gets unfiltered emails from mailhog.
@@ -18,13 +52,10 @@ if (Cypress.env("mailHogUsername") && Cypress.env("mailHogPassword")) {
  * @returns {Promise<any>} The emails.
  */
 const getMessages = (limit) => {
-  return cy
-    .request({
-      method: "GET",
-      url: mhApiUrl(`/v2/messages?limit=${encodeURIComponent(limit)}`),
-      auth: mhAuth,
-      log: false,
-    })
+  return mhRequest(`/v2/messages?limit=${encodeURIComponent(limit)}`, {
+    method: "GET",
+    log: false,
+  })
     .then((response) => {
       if (typeof response.body === "string") {
         return JSON.parse(response.body);
@@ -43,13 +74,13 @@ const getMessages = (limit) => {
  * @returns {Promise<any>} The emails.
  */
 const searchMessages = (kind, query, limit) => {
-  return cy
-    .request({
+  return mhRequest(
+    `/v2/search?kind=${encodeURIComponent(kind)}&query=${encodeURIComponent(query)}&limit=${encodeURIComponent(limit)}`,
+    {
       method: "GET",
-      url: mhApiUrl(`/v2/search?kind=${encodeURIComponent(kind)}&query=${encodeURIComponent(query)}&limit=${encodeURIComponent(limit)}`),
-      auth: mhAuth,
       log: false,
-    })
+    }
+  )
     .then((response) => {
       if (typeof response.body === "string") {
         return JSON.parse(response.body);
@@ -94,34 +125,27 @@ const retryFetchMessages = (fetcher, filter, limit, options = {}) => {
 };
 
 Cypress.Commands.add("mhGetJimMode", () => {
-  return cy
-    .request({
-      method: "GET",
-      url: mhApiUrl("/v2/jim"),
-      failOnStatusCode: false,
-      auth: mhAuth,
-    })
+  return mhRequest("/v2/jim", {
+    method: "GET",
+    failOnStatusCode: false,
+  })
     .then((response) => {
       return cy.wrap(response.status === 200);
     });
 });
 
 Cypress.Commands.add("mhSetJimMode", (enabled) => {
-  return cy.request({
+  return mhRequest("/v2/jim", {
     method: enabled ? "POST" : "DELETE",
-    url: mhApiUrl("/v2/jim"),
     failOnStatusCode: false,
-    auth: mhAuth,
   });
 });
 
 /** Mail Collection */
 
 Cypress.Commands.add("mhDeleteAll", (options = {}) => {
-  return cy.request({
+  return mhRequest("/v1/messages", {
     method: "DELETE",
-    url: mhApiUrl("/v1/messages"),
-    auth: mhAuth,
     timeout: options.timeout || Cypress.config('responseTimeout') || 30000,
   });
 });

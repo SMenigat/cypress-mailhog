@@ -26,36 +26,47 @@ Include this package into your Cypress command file:
 import 'cypress-mailhog';
 ```
 
-Add the base url of your MailHog installation in the `e2e` block of your `cypress.config.ts` / `cypress.config.js`:
+Add the base url of your MailHog installation to the `expose` block of your `cypress.config.ts` / `cypress.config.js`:
 
 ```typescript
 export default defineConfig({
   projectId: "****",
-  env: {
+  expose: {
     mailHogUrl: "http://localhost:8090/",
   },
 });
 ```
 
+You can also pass it via the CLI (`cypress run --expose mailHogUrl=http://localhost:8090/`).
+For backwards compatibility, `mailHogUrl` is also read from `env` (e.g. `CYPRESS_mailHogUrl`) and from the `e2e` config block.
+
+> **Note:** Since version 3.0 this package requires Cypress `>= 15.10.0`, because it uses
+> [`Cypress.expose()`](https://on.cypress.io/expose) and [`cy.env()`](https://on.cypress.io/env)
+> instead of `Cypress.env()`, which was removed in Cypress 16. Use version 2.x for older Cypress versions.
+
 ### MailHog authentication (Basic Auth)
 
-If your MailHog instance uses authentication, add `mailHogAuth` to your cypress `env` config:
+If your MailHog instance uses authentication, add `mailHogAuth` to your cypress `env` config.
+Credentials are read with `cy.env()`, so they are never exposed to the browser / application under test.
 
-```json
-{
-  ...
-  "mailHogAuth": {"user": "mailhog username", "pass": "mailhog password"}
-}
+```typescript
+export default defineConfig({
+  env: {
+    mailHogAuth: { user: "mailhog username", pass: "mailhog password" },
+  },
+});
 ```
 
-or add `mailHogUsername` and `mailHogPassword` in cypress env config
+or add `mailHogUsername` and `mailHogPassword` to your cypress `env` config
+(e.g. via the `CYPRESS_mailHogUsername` and `CYPRESS_mailHogPassword` environment variables):
 
-```json
-{
-  ...
-  "mailHogUsername": "mailhog username",
-  "mailHogPassword": "mailhog password"
-}
+```typescript
+export default defineConfig({
+  env: {
+    mailHogUsername: "mailhog username",
+    mailHogPassword: "mailhog password",
+  },
+});
 ```
 
 ## Commands
@@ -341,14 +352,14 @@ yarn # or npm install
 Start docker server.
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Open the test page in your browser: [http://localhost:3000/cypress-mh-tests/](http://localhost:3000/cypress-mh-tests/)
 
 Open MailHog in your browser: [http://localhost:8090/](http://localhost:8090/)
 
-Open the Cypress testclient.
+Open the Cypress test client.
 
 ```bash
 yarn cypress:open
