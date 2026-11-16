@@ -3,3 +3,4 @@ test-server/
 eslint.config.js
 documentation/
 .claude/
+.dockerignore
