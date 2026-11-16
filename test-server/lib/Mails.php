@@ -63,6 +63,22 @@ class Mails
   }
 
   /**
+   * Sends a UTF-8 mail with a quoted-printable encoded body and an encoded subject
+   *
+   * @return void
+   */
+  public function sendSingleEncoded()
+  {
+    $mail = $this->createMail();
+    $mail->CharSet = PHPMailer::CHARSET_UTF8;
+    $mail->Encoding = PHPMailer::ENCODING_QUOTED_PRINTABLE;
+    $mail->Subject = 'Grüße aus Köln 🐗';
+    $mail->Body = '<p>Grüße! This HTML line is long enough to be soft-wrapped by the quoted-printable encoding.</p>';
+    $mail->AltBody = 'Grüße! This plain text line is long enough to be soft-wrapped by the quoted-printable encoding.';
+    $mail->send();
+  }
+
+  /**
    * Sends given amount of mails
    *
    * @param integer $amount
