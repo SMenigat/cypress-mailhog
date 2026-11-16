@@ -73,9 +73,9 @@ class Mails
   {
     for ($i = 1; $i <= $amount; $i++) {
       if ($uniqueSenders) {
-        $this->sendSingle("Unique Mail ${i}/${amount}", "single-${i}@example.com", "recipient-${i}@example.com");
+        $this->sendSingle("Unique Mail {$i}/{$amount}", "single-{$i}@example.com", "recipient-{$i}@example.com");
       } else {
-        $this->sendSingle("Bulk Mail ${i}/${amount}");
+        $this->sendSingle("Bulk Mail {$i}/{$amount}");
       }
     }
   }

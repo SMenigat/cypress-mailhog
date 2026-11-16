@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-   image: webdevops/php-apache-dev:7.4
+   image: webdevops/php-apache-dev:8.5
    depends_on:
      - mailhog
    links:
