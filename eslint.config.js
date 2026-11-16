@@ -9,6 +9,7 @@ module.exports = [
       sourceType: "script",
       globals: {
         ...globals.browser,
+        ...globals.commonjs,
         Cypress: "readonly",
         cy: "readonly",
       },

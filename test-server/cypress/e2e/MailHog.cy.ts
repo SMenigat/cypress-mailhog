@@ -127,6 +127,51 @@ describe("MailHog", () => {
       });
     });
   });
+  describe("Parsing a Mail 📨", () => {
+    beforeEach(() => {
+      cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
+      cy.mhDeleteAll();
+    });
+    it("mail.mhParseMail() - decodes quoted-printable bodies and encoded headers", () => {
+      triggerAction("generate-single-encoded");
+      cy.mhWaitForMails()
+        .mhGetAllMails()
+        .mhFirst()
+        .as("mail")
+        .mhGetBody()
+        .should("not.contain", "Grüße");
+      cy.get("@mail")
+        .mhParseMail()
+        .then((parsed) => {
+          expect(parsed.subject).to.eq("Grüße aus Köln 🐗");
+          expect(parsed.from).to.deep.include({ address: "single@example.com" });
+          expect(parsed.text).to.contain(
+            "Grüße! This plain text line is long enough to be soft-wrapped by the quoted-printable encoding."
+          );
+          expect(parsed.html).to.contain(
+            "<p>Grüße! This HTML line is long enough to be soft-wrapped by the quoted-printable encoding.</p>"
+          );
+        });
+    });
+    it("mail.mhParseMail() - yields attachments with their content", () => {
+      triggerAction("generate-single-with-attachment");
+      cy.mhWaitForMails()
+        .mhGetAllMails()
+        .mhFirst()
+        .mhParseMail()
+        .its("attachments")
+        .then((attachments) => {
+          expect(attachments.map((a) => a.filename)).to.have.members([
+            "attachment.txt",
+            "sample.pdf",
+          ]);
+          const txt = attachments.find((a) => a.filename === "attachment.txt");
+          expect(new TextDecoder().decode(txt!.content as ArrayBuffer)).to.eq(
+            "Test attachment"
+          );
+        });
+    });
+  });
   describe("Asserting the Mail Collection 🔍", () => {
     beforeEach(() => {
       cy.mhDeleteAll();

@@ -37,6 +37,7 @@ declare namespace Cypress {
     mhFilterBySender(from: string): Chainable<mailhog.Item[]>;
     mhGetSubject(): Chainable<string>;
     mhGetBody(): Chainable<string>;
+    mhParseMail(): Chainable<import('postal-mime').Email>;
     mhGetSender(): Chainable<string>;
     mhGetRecipients(): Chainable<string[]>;
     mhGetAttachments(): Chainable<string[]>;

@@ -227,6 +227,29 @@ cy
   .should('contain', 'Part of the Message Body');
 ```
 
+**Note:** `mhGetBody()` yields the raw body as stored by MailHog, which may still be encoded (e.g. quoted-printable). Use `mhParseMail()` to get the decoded text.
+
+#### mhParseMail()
+
+Parses the current mail with [postal-mime](https://github.com/postalsys/postal-mime) and yields the decoded result: `subject`, `from`, `to`, `cc`, `headers`, `text`, `html` and `attachments` (including their content). Encoded bodies (quoted-printable, base64), encoded headers and charsets are decoded — no `cy.task()` or plugin setup required.
+
+```JavaScript
+cy
+  .mhGetAllMails()
+  .should('have.length', 1)
+  .mhFirst()
+  .mhParseMail()
+  .its('text')
+  .should('contain', 'Grüße');
+
+cy
+  .mhGetMailsBySubject('Mail with Attachment')
+  .mhFirst()
+  .mhParseMail()
+  .its('attachments')
+  .should('have.length', 2);
+```
+
 #### mhGetSender()
 
 Yields the sender of the current mail.

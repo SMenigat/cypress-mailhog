@@ -1,3 +1,5 @@
+const PostalMime = require("postal-mime");
+
 /**
  * Resolves the MailHog base url.
  * Lookup order: `expose.mailHogUrl` -> `env.mailHogUrl` -> `e2e.mailHogUrl` (config).
@@ -238,6 +240,10 @@ Cypress.Commands.add("mhGetSubject", { prevSubject: true }, (mail) => {
 
 Cypress.Commands.add("mhGetBody", { prevSubject: true }, (mail) => {
   return cy.wrap(mail.Content).its("Body");
+});
+
+Cypress.Commands.add("mhParseMail", { prevSubject: true }, (mail) => {
+  return cy.wrap(PostalMime.parse(mail.Raw.Data), { log: false });
 });
 
 Cypress.Commands.add("mhGetSender", { prevSubject: true }, (mail) => {
