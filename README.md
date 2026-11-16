@@ -4,7 +4,30 @@ A collection of useful Cypress commands for MailHog 🐗.
 
 This package supports TypeScript out of the box.
 
-### Setup
+```JavaScript
+it('sends a confirmation mail that activates the account', () => {
+  cy.mhDeleteAll();
+  cy.visit('/sign-up');
+  cy.get('input[name=email]').type('jane@example.com');
+  cy.contains('button', 'Sign up').click();
+
+  cy.mhGetMailsByRecipient('jane@example.com') // retries until the mail arrives
+    .should('have.length', 1)
+    .mhFirst()
+    .as('mail');
+
+  cy.get('@mail').mhGetSubject().should('eq', 'Confirm your account');
+  cy.get('@mail').mhGetText().should('contain', 'Hi Jane');
+  cy.get('@mail').mhGetAttachments().should('include', 'terms.pdf');
+
+  cy.get('@mail').mhGetLinkByLabel('Confirm account').mhVisitLink();
+  cy.contains('Your account is confirmed');
+});
+```
+
+## Setup
+
+### Installation
 
 Install this package:
 
@@ -25,6 +48,8 @@ Include this package into your Cypress command file:
 // cypress/support/commands
 import 'cypress-mailhog';
 ```
+
+### Configuration
 
 Add the base url of your MailHog installation to the `expose` block of your `cypress.config.ts` / `cypress.config.js`:
 
