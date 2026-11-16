@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint index.js"
   },
   "repository": {
     "type": "git",
@@ -27,10 +27,11 @@
     "cypress": ">=15.10.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "cypress": "16.3.0",
-    "eslint": "^4.19.1",
-    "eslint-config-google": "^0.9.1",
-    "prettier": "^1.11.1",
-    "typescript": "^5.9.3"
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "^7.0.2"
   }
 }
