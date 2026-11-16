@@ -1,5 +1,5 @@
-FROM cypress/included:12.13.0
+FROM cypress/included:16.3.0
 
 ADD . /e2e
 WORKDIR /e2e/test-server
-RUN cd /e2e/test-server && yarn
+RUN npx --yes yarn@1.22.22 install --frozen-lockfile

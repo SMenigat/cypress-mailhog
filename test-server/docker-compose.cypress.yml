@@ -8,4 +8,4 @@ services:
       - web
     environment: 
       - CYPRESS_BASE_URL=http://web/cypress-mh-tests/
-      - CYPRESS_mailHogUrl=http://mailhog:8025
+    command: --expose mailHogUrl=http://mailhog:8025
