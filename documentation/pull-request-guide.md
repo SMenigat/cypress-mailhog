@@ -14,7 +14,7 @@ Before creating a PR, ensure:
 - New or changed commands are covered in `test-server/cypress/e2e/MailHog.cy.ts`,
   typed in `types/index.d.ts` and documented in the `README.md`
 - Commits follow semantic commit conventions
-- Branch is up to date with `master`
+- Branch is up to date with `main`
 
 #### Running the tests
 
@@ -165,7 +165,7 @@ Before submitting your PR, verify:
 ## Integration with Release Notes
 
 [Release Drafter](https://github.com/release-drafter/release-drafter) keeps a
-draft release up to date on every push to `master`
+draft release up to date on every push to `main`
 ([.github/release-drafter.yml](../.github/release-drafter.yml)). The labels you
 apply determine where your PR appears in the release notes:
 

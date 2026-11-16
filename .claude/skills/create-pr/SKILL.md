@@ -19,15 +19,15 @@ user text to paste.
 1. **Verify the branch is ready.**
    - `git status -sb` — branch must be pushed and in sync with its remote
      (`git push -u origin HEAD` first if not).
-   - The base branch is `master`.
+   - The base branch is `main`.
    - Sanity-check tests were run for the change (don't claim "all tests pass"
      unless they were actually run this session). The suite runs in Docker:
      `cd test-server && yarn test`.
 
 2. **Gather the diff** against the base:
-   `git log --oneline origin/master..HEAD` and
-   `git diff --stat origin/master...HEAD`, then read the full diff
-   (`git diff origin/master...HEAD`). Describe what shipped, not what was
+   `git log --oneline origin/main..HEAD` and
+   `git diff --stat origin/main...HEAD`, then read the full diff
+   (`git diff origin/main...HEAD`). Describe what shipped, not what was
    requested.
 
 3. **Quickly review the diff before opening the PR.** A fast sanity pass, not a
@@ -69,7 +69,7 @@ user text to paste.
 6. **Create the PR** with `gh`:
 
    ```bash
-   gh pr create --base master --title "[Type] ..." --body "$(cat <<'EOF'
+   gh pr create --base main --title "[Type] ..." --body "$(cat <<'EOF'
    ## Description
 
    > relates to #123
