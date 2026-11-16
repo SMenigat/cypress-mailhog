@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "target": "es2020",
     "lib": [
       "es2020",

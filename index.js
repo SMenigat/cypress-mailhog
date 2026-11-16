@@ -281,7 +281,7 @@ Cypress.Commands.add("mhGetAttachments", { prevSubject: true }, (mail) => {
 
   // search through mime parts to find attachments
   if (Array.isArray(mail.MIME?.Parts)) {
-    for (const mimePart of mail.MIME?.Parts) {
+    for (const mimePart of mail.MIME.Parts) {
       // content disposition tells us if this part represents an attachment
       // sample: Content-Disposition: ["attachment; filename=sample.pdf"]
       if (
