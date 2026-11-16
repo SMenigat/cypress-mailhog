@@ -1,6 +1,6 @@
 {
   "name": "cypress-mailhog",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "Cypress Commands for MailHog 🌳🐗",
   "main": "index.js",
   "types": "types/index.d.ts",
