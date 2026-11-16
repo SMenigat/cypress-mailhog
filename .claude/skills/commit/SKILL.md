@@ -40,9 +40,9 @@ format:
    Report the subject line and anything left uncommitted on purpose.
 
 Commit only when asked. **Never push** unless the user asks for that too.
-Code changes go through a pull request, so if you are on `master`, branch first
+Code changes go through a pull request, so if you are on `main`, branch first
 (`feat/…`, `fix/…`, `chore/…`). Version bumps (`chore(version): …`) are the
-exception and are committed on `master` at release time.
+exception and are committed on `main` at release time.
 
 ## Title rules
 
