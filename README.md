@@ -85,7 +85,7 @@ cy
 
 #### mhGetMailsBySubject( subject, limit=50, options={timeout=defaultCommandTimeout} )
 
-Fetches all mails from MailHog and yields an array of all mails with given subject. This retries automatically until mails are found (or until timeout is reached).
+Fetches all mails from MailHog and yields an array of all mails with given subject. Encoded subjects are decoded before comparing. This retries automatically until mails are found (or until timeout is reached).
 
 ```JavaScript
 cy
@@ -155,7 +155,7 @@ cy
 
 #### mhFilterBySubject( subject )
 
-Filters the current mails in context by subject and returns the filtered mail list.
+Filters the current mails in context by subject and returns the filtered mail list. Encoded subjects are decoded before comparing.
 
 ```JavaScript
 cy
@@ -203,7 +203,7 @@ cy
 
 #### mhGetSubject()
 
-Yields the subject of the current mail.
+Yields the decoded subject of the current mail (encoded subjects like `=?UTF-8?Q?Gr=C3=BC=C3=9Fe?=` are yielded as `Grüße`).
 
 ```JavaScript
 cy
@@ -227,7 +227,33 @@ cy
   .should('contain', 'Part of the Message Body');
 ```
 
-**Note:** `mhGetBody()` yields the raw body as stored by MailHog, which may still be encoded (e.g. quoted-printable). Use `mhParseMail()` to get the decoded text.
+**Note:** `mhGetBody()` yields the raw body as stored by MailHog, which may still be encoded (e.g. quoted-printable) and, for multipart mails, contains all parts including their MIME boundaries. Use `mhGetText()` / `mhGetHtml()` to assert on the decoded content.
+
+#### mhGetText()
+
+Yields the decoded plain text body of the current mail (`undefined` if the mail has no text part).
+
+```JavaScript
+cy
+  .mhGetAllMails()
+  .should('have.length', 1)
+  .mhFirst()
+  .mhGetText()
+  .should('contain', 'Grüße');
+```
+
+#### mhGetHtml()
+
+Yields the decoded HTML body of the current mail (`undefined` if the mail has no HTML part).
+
+```JavaScript
+cy
+  .mhGetAllMails()
+  .should('have.length', 1)
+  .mhFirst()
+  .mhGetHtml()
+  .should('contain', '<b>Grüße</b>');
+```
 
 #### mhParseMail()
 

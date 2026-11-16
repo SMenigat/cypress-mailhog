@@ -1,6 +1,36 @@
 const PostalMime = require("postal-mime");
 
 /**
+ * Yields the decoded subject of a mail (RFC 2047 encoded words like
+ * `=?UTF-8?Q?Gr=C3=BC=C3=9Fe?=` are decoded to `Grüße`).
+ * @param {mailhog.Item} mail The MailHog mail.
+ * @returns {string} The decoded subject.
+ */
+const mhDecodedSubject = (mail) => {
+  const subject = mail.Content.Headers.Subject?.[0] ?? "";
+  return PostalMime.decodeWords(subject);
+};
+
+/**
+ * Checks if a mail has the given subject, comparing against the decoded and
+ * the raw subject so that matching the encoded form keeps working.
+ * @param {mailhog.Item} mail The MailHog mail.
+ * @param {string} subject The subject to look for.
+ * @returns {boolean} Whether the subject matches.
+ */
+const mhHasSubject = (mail, subject) =>
+  mhDecodedSubject(mail) === subject ||
+  mail.Content.Headers.Subject?.[0] === subject;
+
+/**
+ * Parses the raw source of a mail with postal-mime.
+ * @param {mailhog.Item} mail The MailHog mail.
+ * @returns {Cypress.Chainable} Yields the parsed mail.
+ */
+const mhParse = (mail) =>
+  cy.wrap(PostalMime.parse(mail.Raw.Data), { log: false });
+
+/**
  * Resolves the MailHog base url.
  * Lookup order: `expose.mailHogUrl` -> `env.mailHogUrl` -> `e2e.mailHogUrl` (config).
  * @param {Record<string, any>} env Values yielded by `cy.env()`.
@@ -166,7 +196,7 @@ Cypress.Commands.add(
   "mhGetMailsBySubject",
   (subject, limit = 50, options = {}) => {
     const filter = (mails) =>
-      mails.filter((mail) => mail.Content.Headers.Subject[0] === subject);
+      mails.filter((mail) => mhHasSubject(mail, subject));
 
     return retryFetchMessages(getMessages, filter, limit, options);
   }
@@ -207,7 +237,7 @@ Cypress.Commands.add(
   { prevSubject: true },
   (messages, subject) => {
     return messages.filter(
-      (mail) => mail.Content.Headers.Subject[0] === subject
+      (mail) => mhHasSubject(mail, subject)
     );
   }
 );
@@ -235,7 +265,7 @@ Cypress.Commands.add(
 /** Single Mail Commands and Assertions */
 
 Cypress.Commands.add("mhGetSubject", { prevSubject: true }, (mail) => {
-  return cy.wrap(mail.Content.Headers).then((headers) => headers.Subject[0]);
+  return cy.wrap(mhDecodedSubject(mail));
 });
 
 Cypress.Commands.add("mhGetBody", { prevSubject: true }, (mail) => {
@@ -243,7 +273,15 @@ Cypress.Commands.add("mhGetBody", { prevSubject: true }, (mail) => {
 });
 
 Cypress.Commands.add("mhParseMail", { prevSubject: true }, (mail) => {
-  return cy.wrap(PostalMime.parse(mail.Raw.Data), { log: false });
+  return mhParse(mail);
+});
+
+Cypress.Commands.add("mhGetText", { prevSubject: true }, (mail) => {
+  return mhParse(mail).then((parsed) => parsed.text);
+});
+
+Cypress.Commands.add("mhGetHtml", { prevSubject: true }, (mail) => {
+  return mhParse(mail).then((parsed) => parsed.html);
 });
 
 Cypress.Commands.add("mhGetSender", { prevSubject: true }, (mail) => {
