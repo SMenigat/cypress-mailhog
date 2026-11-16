@@ -153,6 +153,56 @@ describe("MailHog", () => {
           );
         });
     });
+    it("mail.mhGetText() - returns the decoded plain text body", () => {
+      triggerAction("generate-single-encoded");
+      cy.mhWaitForMails()
+        .mhGetAllMails()
+        .mhFirst()
+        .mhGetText()
+        .should(
+          "contain",
+          "Grüße! This plain text line is long enough to be soft-wrapped by the quoted-printable encoding."
+        );
+    });
+    it("mail.mhGetHtml() - returns the decoded html body", () => {
+      triggerAction("generate-single-encoded");
+      cy.mhWaitForMails()
+        .mhGetAllMails()
+        .mhFirst()
+        .mhGetHtml()
+        .should(
+          "contain",
+          "<p>Grüße! This HTML line is long enough to be soft-wrapped by the quoted-printable encoding.</p>"
+        );
+    });
+    it("mail.mhGetSubject() - returns the decoded subject", () => {
+      triggerAction("generate-single-encoded");
+      cy.mhWaitForMails()
+        .mhGetAllMails()
+        .mhFirst()
+        .mhGetSubject()
+        .should("eq", "Grüße aus Köln 🐗");
+    });
+    it("subject filters and assertions match the decoded subject", () => {
+      triggerAction("generate-single-encoded");
+      cy.mhWaitForMails();
+      cy.mhGetMailsBySubject("Grüße aus Köln 🐗").should("have.length", 1);
+      cy.mhGetAllMails()
+        .mhFilterBySubject("Grüße aus Köln 🐗")
+        .should("have.length", 1);
+      cy.mhHasMailWithSubject("Grüße aus Köln 🐗");
+    });
+    it("subject filters still match the raw encoded subject", () => {
+      triggerAction("generate-single-encoded");
+      cy.mhWaitForMails()
+        .mhGetAllMails()
+        .mhFirst()
+        .then((mail) => {
+          const rawSubject = mail.Content.Headers.Subject[0];
+          expect(rawSubject).not.to.eq("Grüße aus Köln 🐗");
+          cy.mhGetMailsBySubject(rawSubject).should("have.length", 1);
+        });
+    });
     it("mail.mhParseMail() - yields attachments with their content", () => {
       triggerAction("generate-single-with-attachment");
       cy.mhWaitForMails()

@@ -38,6 +38,8 @@ declare namespace Cypress {
     mhGetSubject(): Chainable<string>;
     mhGetBody(): Chainable<string>;
     mhParseMail(): Chainable<import('postal-mime').Email>;
+    mhGetText(): Chainable<string | undefined>;
+    mhGetHtml(): Chainable<string | undefined>;
     mhGetSender(): Chainable<string>;
     mhGetRecipients(): Chainable<string[]>;
     mhGetAttachments(): Chainable<string[]>;
