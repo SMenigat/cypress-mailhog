@@ -1,0 +1,73 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '🚀 Features'
+    labels:
+      - feature
+      - enhancement
+  - title: '🐛 Bug Fixes'
+    labels:
+      - fix
+      - bugfix
+      - bug
+  - title: '🧰 Maintenance'
+    labels:
+      - chore
+      - debug
+      - refactor
+      - docs
+      - Testing
+  - title: '🏗️ CI/DevOps'
+    labels:
+      - CI
+      - devops
+  - title: '📖 Documentation'
+    labels:
+      - documentation
+      - docs
+  - title: '🔗 Dependencies'
+    labels:
+      - dependencies
+      - dependabot
+autolabeler:
+  - label: feature
+    title:
+      - '/^feat(\(.+\))?:/'
+      - '/^\[Feat\]/'
+      - '/^ADDED:/'
+      - '/feature/i'
+  - label: bugfix
+    title:
+      - '/^fix(\(.+\))?:/'
+      - '/^Bugfix/'
+      - '/^FIXED:/'
+      - '/bug.*fix/i'
+  - label: chore
+    title:
+      - '/^chore(\(.+\))?:/'
+      - '/^refactor(\(.+\))?:/'
+      - '/improve/i'
+      - '/enhance/i'
+      - '/update(?!.*workflow)/i'
+  - label: CI
+    title:
+      - '/ci(\(.+\))?:/'
+      - '/workflow/i'
+      - '/github.*action/i'
+      - '/setup.*environment/i'
+      - '/copilot.*setup/i'
+      - '/service.*readiness/i'
+      - '/timeout/i'
+  - label: docs
+    title:
+      - '/^docs(\(.+\))?:/'
+      - '/documentation/i'
+      - '/readme/i'
+      - '/guideline/i'
+      - '/instruction/i'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+template: |
+  ## ❓ Uncategorized Changes
+
+  $CHANGES

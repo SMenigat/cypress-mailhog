@@ -364,3 +364,9 @@ Open the Cypress test client.
 ```bash
 yarn cypress:open
 ```
+
+### Commits, Pull Requests & Releases
+
+- **Commits:** [Conventional Commits](https://www.conventionalcommits.org/), title only — no body, no AI attribution, lowercase scope — e.g. `feat(commands): add mhGetMailsByCc`, `docs(readme): fix typo`. The `/commit` Claude Code skill automates it.
+- **Pull requests:** follow the [pull request guide](./documentation/pull-request-guide.md) (`[Feat] …` titles, Description + Demo sections, labels for release drafting). The `/create-pr` Claude Code skill automates it.
+Merged PRs are collected into a draft release by [Release Drafter](https://github.com/release-drafter/release-drafter), grouped by their labels.
