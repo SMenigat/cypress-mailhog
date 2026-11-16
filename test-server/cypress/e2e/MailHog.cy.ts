@@ -222,6 +222,96 @@ describe("MailHog", () => {
         });
     });
   });
+  describe("Links 🔗", () => {
+    beforeEach(() => {
+      cy.wait(simulatedTransportDelay); // make sure to wait for delayed messages before cleaning up
+      cy.mhDeleteAll();
+    });
+    const getLinkMail = () =>
+      cy.mhGetMailsBySubject("Mail with Links").should("have.length", 1).mhFirst();
+
+    it("mail.mhGetLinks() - returns all links of the html part with label and href", () => {
+      triggerAction("generate-single-with-links");
+      getLinkMail().as("mail").mhGetBody().should("contain", "=3D"); // body is quoted-printable encoded
+      cy.get("@mail")
+        .mhGetLinks()
+        .then((links) => {
+          expect(links.map((link) => link.label)).to.deep.eq([
+            "Confirm account",
+            "Reset password",
+            "Contact support",
+            "Unsubscribe",
+            "Unsubscribe",
+          ]);
+          expect(links[0].href).to.match(
+            /\/cypress-mh-tests\/confirm\.html\?token=abc123&source=mail&utm_campaign=a-very-long-campaign-name-forcing-soft-line-breaks$/
+          );
+          expect(links[2].href).to.eq("mailto:support@example.com");
+        });
+    });
+    it("mail.mhGetLinks() - falls back to urls in the plain text part", () => {
+      triggerAction("generate-single-text-with-link");
+      cy.mhGetMailsBySubject("Text Mail with Link")
+        .should("have.length", 1)
+        .mhFirst()
+        .mhGetLinks()
+        .should("have.length", 1)
+        .its(0)
+        .then((link) => {
+          expect(link.href).to.match(/\/confirm\.html\?token=text456$/);
+          expect(link.label).to.eq(link.href);
+        });
+    });
+    it("mail.mhGetLinkByLabel(label) - returns the first link with the exact label", () => {
+      triggerAction("generate-single-with-links");
+      getLinkMail()
+        .mhGetLinkByLabel("Unsubscribe")
+        .its("href")
+        .should("match", /\/unsubscribe\.html$/);
+    });
+    it("mail.mhGetLinkByLabel(regexp) - returns the first link matching the pattern", () => {
+      triggerAction("generate-single-with-links");
+      getLinkMail()
+        .mhGetLinkByLabel(/reset/i)
+        .its("href")
+        .should("match", /\/reset\.html$/);
+    });
+    it("mail.mhGetLinkByHref(href) - returns the link with the exact href or pattern", () => {
+      triggerAction("generate-single-with-links");
+      getLinkMail()
+        .mhGetLinkByHref("mailto:support@example.com")
+        .its("label")
+        .should("eq", "Contact support");
+      getLinkMail()
+        .mhGetLinkByHref(/unsubscribe\.html\?all=1$/)
+        .its("label")
+        .should("eq", "Unsubscribe");
+    });
+    it("mail.mhGetLinkByLabel(label) - fails listing the available labels", (done) => {
+      cy.on("fail", (error) => {
+        expect(error.message).to.contain('No link with label "Confirm" found.');
+        expect(error.message).to.contain('"Confirm account"');
+        done();
+      });
+      triggerAction("generate-single-with-links");
+      getLinkMail().mhGetLinkByLabel("Confirm");
+    });
+    it("link.mhVisitLink() - visits the link selected by label", () => {
+      triggerAction("generate-single-with-links");
+      getLinkMail().mhGetLinkByLabel("Confirm account").mhVisitLink();
+      cy.contains("h1", "Your account is confirmed");
+      cy.get(".token").should("have.text", "abc123");
+    });
+    it("links.mhVisitLink() - visits the first link of a list", () => {
+      triggerAction("generate-single-text-with-link");
+      cy.mhGetMailsBySubject("Text Mail with Link")
+        .should("have.length", 1)
+        .mhFirst()
+        .mhGetLinks()
+        .mhVisitLink();
+      cy.get(".token").should("have.text", "text456");
+    });
+  });
   describe("Asserting the Mail Collection 🔍", () => {
     beforeEach(() => {
       cy.mhDeleteAll();

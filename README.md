@@ -316,6 +316,65 @@ cy
   .should('include', 'sample.pdf');
 ```
 
+### Links 🔗
+
+Links are extracted from the decoded HTML part (quoted-printable encoding and HTML entities like `&amp;` are resolved). Mails without an HTML part fall back to the plain `http(s)://` urls found in the text part, using the url as label. Labels have their whitespace collapsed; image-only links use `aria-label`, `title` or the image's `alt` text.
+
+#### mhGetLinks()
+
+Yields all links of the current mail as `{ label, href }` objects, in document order.
+
+```JavaScript
+cy
+  .mhGetMailsBySubject('Newsletter')
+  .mhFirst()
+  .mhGetLinks()
+  .each((link) => cy.request(link.href)); // e.g. assert there are no broken links
+```
+
+#### mhGetLinkByLabel( label )
+
+Yields the first link whose label equals `label` (exact match) or matches the given `RegExp`. Fails with a list of the available labels if no link matches.
+
+```JavaScript
+cy
+  .mhGetMailsBySubject('Confirm your account')
+  .mhFirst()
+  .mhGetLinkByLabel('Confirm account')
+  .its('href')
+  .should('contain', 'token=');
+```
+
+#### mhGetLinkByHref( href )
+
+Yields the first link whose href equals `href` (exact match) or matches the given `RegExp`. Fails with a list of the available hrefs if no link matches.
+
+```JavaScript
+cy
+  .mhGetMailsBySubject('Confirm your account')
+  .mhFirst()
+  .mhGetLinkByHref(/\/confirm\?token=/)
+  .its('label')
+  .should('eq', 'Confirm account');
+```
+
+#### mhVisitLink( options={} )
+
+Visits the link yielded by `mhGetLinkByLabel()` / `mhGetLinkByHref()`, or the first link of the list yielded by `mhGetLinks()`. `options` are passed on to `cy.visit()`.
+
+```JavaScript
+// click-through test
+cy
+  .mhGetMailsBySubject('Confirm your account')
+  .mhFirst()
+  .mhGetLinkByLabel('Confirm account')
+  .mhVisitLink();
+
+cy.contains('Your account is confirmed');
+```
+
+**Note:** if the link points to a different origin than your `baseUrl`, wrap the following commands in [`cy.origin()`](https://on.cypress.io/origin).
+
 ### Asserting the Mail Collection 🔍
 
 #### mhHasMailWithSubject( subject )

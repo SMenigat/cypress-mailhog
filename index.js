@@ -298,6 +298,109 @@ Cypress.Commands.add("mhGetRecipients", { prevSubject: true }, (mail) => {
     );
 });
 
+/** Links */
+
+/**
+ * Collapses whitespace so that labels spanning multiple lines / elements
+ * become a single readable string.
+ * @param {string | null | undefined} value The raw label.
+ * @returns {string} The normalized label.
+ */
+const normalizeLabel = (value) => (value || "").replace(/\s+/g, " ").trim();
+
+/**
+ * Extracts all `<a href>` links from an html body.
+ * Image-only links fall back to `aria-label`, `title` or the image `alt`.
+ * @param {string} html The decoded html body.
+ * @returns {mailhog.Link[]} The links in document order.
+ */
+const linksFromHtml = (html) => {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return Array.from(doc.querySelectorAll("a[href]")).map((anchor) => {
+    const label =
+      normalizeLabel(anchor.textContent) ||
+      normalizeLabel(anchor.getAttribute("aria-label")) ||
+      normalizeLabel(anchor.getAttribute("title")) ||
+      normalizeLabel(
+        Array.from(anchor.querySelectorAll("img[alt]"))
+          .map((img) => img.getAttribute("alt"))
+          .join(" ")
+      );
+    return { label, href: anchor.getAttribute("href").trim() };
+  });
+};
+
+/**
+ * Extracts bare http(s) urls from a plain text body. The url doubles as label.
+ * @param {string} text The decoded plain text body.
+ * @returns {mailhog.Link[]} The links in order of appearance.
+ */
+const linksFromText = (text) =>
+  (text.match(/https?:\/\/[^\s<>"']+/g) || [])
+    .map((url) => url.replace(/[.,;:!?)\]}]+$/, ""))
+    .map((href) => ({ label: href, href }));
+
+/**
+ * Parses a mail and yields its links, preferring the html part.
+ * @param {mailhog.Item} mail The MailHog mail.
+ * @returns {Cypress.Chainable} Yields `mailhog.Link[]`.
+ */
+const mhLinks = (mail) =>
+  mhParse(mail).then((parsed) =>
+    parsed.html
+      ? linksFromHtml(parsed.html)
+      : linksFromText(parsed.text || "")
+  );
+
+/**
+ * Finds the first link whose `key` matches the query (exact string or RegExp).
+ * @param {mailhog.Link[]} links The links to search.
+ * @param {"label" | "href"} key The link property to match.
+ * @param {string | RegExp} query The exact value or a pattern.
+ * @returns {mailhog.Link} The matching link.
+ */
+const findLink = (links, key, query) => {
+  const isMatch = (value) =>
+    query instanceof RegExp ? value.search(query) !== -1 : value === query;
+  const link = links.find((candidate) => isMatch(candidate[key]));
+  if (!link) {
+    const available =
+      links.map((candidate) => JSON.stringify(candidate[key])).join(", ") ||
+      "none";
+    const wanted = query instanceof RegExp ? String(query) : JSON.stringify(query);
+    throw new Error(
+      `No link with ${key} ${wanted} found. Available ${key}s: ${available}`
+    );
+  }
+  return link;
+};
+
+Cypress.Commands.add("mhGetLinks", { prevSubject: true }, (mail) => {
+  return mhLinks(mail);
+});
+
+Cypress.Commands.add("mhGetLinkByLabel", { prevSubject: true }, (mail, label) => {
+  return mhLinks(mail).then((links) => findLink(links, "label", label));
+});
+
+Cypress.Commands.add("mhGetLinkByHref", { prevSubject: true }, (mail, href) => {
+  return mhLinks(mail).then((links) => findLink(links, "href", href));
+});
+
+Cypress.Commands.add(
+  "mhVisitLink",
+  { prevSubject: true },
+  (subject, options = {}) => {
+    const link = Array.isArray(subject) ? subject[0] : subject;
+    if (!link || typeof link.href !== "string") {
+      throw new Error(
+        "mhVisitLink() needs a link yielded by mhGetLinks(), mhGetLinkByLabel() or mhGetLinkByHref()."
+      );
+    }
+    return cy.visit(link.href, options);
+  }
+);
+
 /** Mail Collection Assertions */
 
 Cypress.Commands.add("mhHasMailWithSubject", (subject) => {
