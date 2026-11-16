@@ -1,3 +1,5 @@
 .github/
 test-server/
 .eslintrc.js
+documentation/
+.claude/
