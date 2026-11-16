@@ -79,6 +79,43 @@ class Mails
   }
 
   /**
+   * Sends a quoted-printable html mail containing various kinds of links
+   *
+   * @param string $baseUrl url of the test page, used to build absolute links
+   * @return void
+   */
+  public function sendSingleWithLinks($baseUrl)
+  {
+    $mail = $this->createMail();
+    $mail->CharSet = PHPMailer::CHARSET_UTF8;
+    $mail->Encoding = PHPMailer::ENCODING_QUOTED_PRINTABLE;
+    $mail->Subject = 'Mail with Links';
+    $mail->Body = '<p>Welcome!</p>'
+      . '<p><a href="' . $baseUrl . 'confirm.html?token=abc123&amp;source=mail&amp;utm_campaign=a-very-long-campaign-name-forcing-soft-line-breaks">'
+      . "\n  <b>Confirm</b>\n  account\n</a></p>"
+      . '<p><a href="' . $baseUrl . 'reset.html"><img src="' . $baseUrl . 'logo.png" alt="Reset password"></a></p>'
+      . '<p><a href="mailto:support@example.com">Contact support</a></p>'
+      . '<p><a href="' . $baseUrl . 'unsubscribe.html">Unsubscribe</a> | <a href="' . $baseUrl . 'unsubscribe.html?all=1">Unsubscribe</a></p>';
+    $mail->AltBody = 'Confirm your account: ' . $baseUrl . 'confirm.html?token=abc123';
+    $mail->send();
+  }
+
+  /**
+   * Sends a plain text mail containing a bare link
+   *
+   * @param string $baseUrl url of the test page, used to build absolute links
+   * @return void
+   */
+  public function sendSingleTextWithLink($baseUrl)
+  {
+    $mail = $this->createMail();
+    $mail->isHTML(false);
+    $mail->Subject = 'Text Mail with Link';
+    $mail->Body = "Please confirm your account: {$baseUrl}confirm.html?token=text456.\nThanks!";
+    $mail->send();
+  }
+
+  /**
    * Sends given amount of mails
    *
    * @param integer $amount

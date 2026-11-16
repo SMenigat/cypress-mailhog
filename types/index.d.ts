@@ -40,6 +40,10 @@ declare namespace Cypress {
     mhParseMail(): Chainable<import('postal-mime').Email>;
     mhGetText(): Chainable<string | undefined>;
     mhGetHtml(): Chainable<string | undefined>;
+    mhGetLinks(): Chainable<mailhog.Link[]>;
+    mhGetLinkByLabel(label: string | RegExp): Chainable<mailhog.Link>;
+    mhGetLinkByHref(href: string | RegExp): Chainable<mailhog.Link>;
+    mhVisitLink(options?: Partial<VisitOptions>): Chainable<AUTWindow>;
     mhGetSender(): Chainable<string>;
     mhGetRecipients(): Chainable<string[]>;
     mhGetAttachments(): Chainable<string[]>;
@@ -86,6 +90,11 @@ declare namespace mailhog {
      Mailbox: string;
      Domain: string;
      Params: string;
+   }
+ 
+   interface Link {
+     label: string;
+     href: string;
    }
  
    interface Raw {

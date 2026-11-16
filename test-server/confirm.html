@@ -1,0 +1,17 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Account confirmed</title>
+</head>
+
+<body>
+  <h1>Your account is confirmed</h1>
+  <p>Token: <span class="token"></span></p>
+  <script>
+    document.querySelector('.token').textContent =
+      new URLSearchParams(window.location.search).get('token');
+  </script>
+</body>
+
+</html>
